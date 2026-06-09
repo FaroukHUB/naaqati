@@ -13,9 +13,22 @@ class CartPage extends Component
 {
     public ?int $packagingId = null;
 
-    public function mount(CartService $cart): void
+    public function mount(CartService $cart, CurrentRelais $relais): void
     {
         $this->packagingId = $cart->packaging()?->id;
+
+        // Sélectionne le premier emballage (le moins cher) par défaut.
+        if ($this->packagingId === null) {
+            $premier = Packaging::where('actif', true)
+                ->where(fn ($q) => $q->whereNull('relais_id')->orWhere('relais_id', $relais->id()))
+                ->orderBy('prix')
+                ->first();
+
+            if ($premier) {
+                $this->packagingId = $premier->id;
+                $cart->setPackaging($premier->id);
+            }
+        }
     }
 
     public function changerQuantite(int $productId, int $delta, CartService $cart): void

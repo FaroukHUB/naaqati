@@ -42,26 +42,6 @@
                 <div class="rounded-2xl border border-stone-100 bg-white p-4 shadow-sm">
                     <label class="mb-3 block text-sm font-semibold text-stone-700">Emballage</label>
                     <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                        {{-- Option par défaut : sachet kraft gratuit --}}
-                        <button type="button" wire:click="choisirEmballage(null)"
-                                @class([
-                                    'group relative overflow-hidden rounded-xl border-2 p-3 text-left transition',
-                                    'bg-white border-stone-200 hover:border-stone-300' => $packagingId !== null,
-                                ])
-                                @style(['border-color:#B76E79;background-color:#FBF1F3' => $packagingId === null])>
-                            <div class="flex h-16 items-center justify-center rounded-lg bg-stone-100 text-stone-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg>
-                            </div>
-                            <p class="mt-2 text-xs font-semibold text-stone-800">Sachet kraft</p>
-                            <p class="text-[11px] text-stone-400">Gratuit</p>
-                            @if ($packagingId === null)
-                                <span class="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full text-white" style="background-color:#B76E79;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                                </span>
-                            @endif
-                        </button>
-
-                        {{-- Emballages payants --}}
                         @foreach ($emballages as $emb)
                             @php $embImg = $emb->getFirstMediaUrl('image'); @endphp
                             <button type="button" wire:click="choisirEmballage({{ $emb->id }})"
