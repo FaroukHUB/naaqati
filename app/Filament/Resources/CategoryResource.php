@@ -46,6 +46,11 @@ class CategoryResource extends Resource
                 Forms\Components\Toggle::make('actif')
                     ->label('Catégorie active')
                     ->default(true),
+                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                    ->label('Photo de la catégorie')
+                    ->collection('image')
+                    ->image()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -53,6 +58,10 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
+                    ->label('Photo')
+                    ->collection('image')
+                    ->square(),
                 Tables\Columns\TextColumn::make('nom')
                     ->label('Nom')
                     ->searchable()
