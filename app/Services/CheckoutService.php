@@ -55,8 +55,9 @@ class CheckoutService
                 'packaging_id' => null,
                 'frais_emballage' => $fraisTotal,
                 'total' => $sousTotal + $fraisTotal,
-                'date_retrait' => $infos['date_retrait'],
-                'creneau_retrait' => $infos['creneau'],
+                'date_retrait' => $infos['date_retrait'] ?? null,
+                'creneau_retrait' => $infos['creneau'] ?? null,
+                'recuperateur' => $infos['recuperateur'] ?? null,
                 'commentaire' => $infos['commentaire'] ?? null,
             ]);
 

@@ -15,9 +15,17 @@ class Checkout extends Component
     public string $nom = '';
     public string $telephone = '';
     public string $email = '';
-    public string $date_retrait = '';
-    public string $creneau = '';
+    public string $recuperateur = '';
     public string $commentaire = '';
+
+    // Date : 'date' (une date choisie) ou 'inconnue'
+    public string $dateMode = 'date';
+    public string $date_retrait = '';
+
+    // Heure : 'creneau' | 'precise' | 'inconnue'
+    public string $heureMode = 'creneau';
+    public string $creneau = '';
+    public string $heurePrecise = '';
 
     public array $creneauxLabels = [
         'matin' => 'Matin',
@@ -31,7 +39,6 @@ class Checkout extends Component
             return redirect()->route('shop.catalog');
         }
 
-        // Pré-remplissage si la cliente est connectée.
         if ($c = auth('customer')->user()) {
             $this->nom = $c->nom;
             $this->telephone = $c->telephone;
@@ -39,45 +46,82 @@ class Checkout extends Component
         }
     }
 
+    public function setDateMode(string $mode): void
+    {
+        $this->dateMode = $mode;
+        if ($mode === 'inconnue') {
+            $this->date_retrait = '';
+        }
+    }
+
     public function selectDate(string $date): void
     {
+        $this->dateMode = 'date';
         $this->date_retrait = $date;
         $this->creneau = '';
     }
 
+    public function setHeureMode(string $mode): void
+    {
+        $this->heureMode = $mode;
+        $this->creneau = '';
+        $this->heurePrecise = '';
+    }
+
     public function selectCreneau(string $creneau): void
     {
+        $this->heureMode = 'creneau';
         $this->creneau = $creneau;
     }
 
     public function valider(CheckoutService $checkout, PickupService $pickup, CurrentRelais $relais)
     {
-        $dispos = $pickup->creneauxDisponibles($relais->id());
-
         $this->validate([
             'nom' => ['required', 'string', 'min:2', 'max:255'],
             'telephone' => ['required', 'string', 'min:6', 'max:30'],
             'email' => ['nullable', 'email', 'max:190'],
-            'date_retrait' => ['required', 'date'],
-            'creneau' => ['required', 'string'],
+            'recuperateur' => ['nullable', 'string', 'max:255'],
             'commentaire' => ['nullable', 'string', 'max:1000'],
         ], attributes: [
-            'nom' => 'nom', 'telephone' => 'téléphone', 'date_retrait' => 'date de retrait', 'creneau' => 'créneau',
+            'nom' => 'nom', 'telephone' => 'téléphone',
         ]);
 
-        // Sécurité : le créneau choisi doit être réellement disponible.
-        if (! in_array($this->creneau, $dispos[$this->date_retrait] ?? [], true)) {
-            $this->addError('creneau', 'Ce créneau n\'est plus disponible, merci d\'en choisir un autre.');
-            return;
+        $dateFinale = null;
+        $creneauFinal = null;
+
+        if ($this->dateMode === 'date') {
+            if ($this->date_retrait === '') {
+                $this->addError('date_retrait', 'Choisissez une date ou « Je ne sais pas encore ».');
+                return;
+            }
+            $dateFinale = $this->date_retrait;
+
+            if ($this->heureMode === 'creneau') {
+                $dispos = $pickup->creneauxDisponibles($relais->id());
+                if ($this->creneau === '' || ! in_array($this->creneau, $dispos[$this->date_retrait] ?? [], true)) {
+                    $this->addError('creneau', 'Choisissez un créneau disponible (ou une autre option d\'heure).');
+                    return;
+                }
+                $creneauFinal = $this->creneau;
+            } elseif ($this->heureMode === 'precise') {
+                if (! preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $this->heurePrecise)) {
+                    $this->addError('heurePrecise', 'Indiquez une heure valide (ex : 14:30).');
+                    return;
+                }
+                $creneauFinal = $this->heurePrecise;
+            }
+            // heureMode 'inconnue' => créneau null
         }
+        // dateMode 'inconnue' => date et créneau null
 
         try {
             $order = $checkout->passerCommande([
                 'nom' => $this->nom,
                 'telephone' => $this->telephone,
                 'email' => $this->email ?: null,
-                'date_retrait' => $this->date_retrait,
-                'creneau' => $this->creneau,
+                'date_retrait' => $dateFinale,
+                'creneau' => $creneauFinal,
+                'recuperateur' => $this->recuperateur ?: null,
                 'commentaire' => $this->commentaire ?: null,
             ]);
         } catch (\Throwable $e) {

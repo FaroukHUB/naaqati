@@ -9,7 +9,11 @@
 
             <div class="mt-6 space-y-3 rounded-xl bg-stone-50 p-5 text-left text-sm">
                 <div class="flex justify-between"><span class="text-stone-500">N° de commande</span><span class="font-semibold text-stone-800">{{ $order->numero }}</span></div>
-                <div class="flex justify-between"><span class="text-stone-500">Retrait</span><span class="font-semibold text-stone-800">{{ \Carbon\Carbon::parse($order->date_retrait)->isoFormat('dddd D MMMM') }} · {{ ucfirst(str_replace('_',' ',$order->creneau_retrait)) }}</span></div>
+                @php
+                    $retrait = $order->date_retrait ? \Carbon\Carbon::parse($order->date_retrait)->isoFormat('dddd D MMMM') : 'À définir';
+                    if ($order->creneau_retrait) { $retrait .= ' · ' . ucfirst(str_replace('_', ' ', $order->creneau_retrait)); }
+                @endphp
+                <div class="flex justify-between"><span class="text-stone-500">Retrait</span><span class="font-semibold text-stone-800">{{ $retrait }}</span></div>
                 <div class="flex justify-between"><span class="text-stone-500">Point relais</span><span class="font-semibold text-stone-800">{{ $order->relais->nom }}</span></div>
                 <div class="flex justify-between border-t border-stone-200 pt-3 text-base"><span class="font-bold text-stone-900">Total</span><span class="font-bold" style="color:#B76E79;">{{ number_format($order->total / 100, 0, ',', ' ') }} DA</span></div>
             </div>

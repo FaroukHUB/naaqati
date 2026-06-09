@@ -51,9 +51,14 @@ class OrderResource extends Resource
                     ->helperText('Le changement de statut avec impact sur le stock et l\'envoi WhatsApp sera bientôt automatisé.'),
                 Forms\Components\DatePicker::make('date_retrait')
                     ->label('Date de retrait')
-                    ->displayFormat('d/m/Y'),
+                    ->displayFormat('d/m/Y')
+                    ->placeholder('À définir'),
                 Forms\Components\TextInput::make('creneau_retrait')
-                    ->label('Créneau de retrait'),
+                    ->label('Créneau / heure de retrait')
+                    ->placeholder('À définir'),
+                Forms\Components\TextInput::make('recuperateur')
+                    ->label('Qui récupère')
+                    ->placeholder('Non précisé'),
                 Forms\Components\TextInput::make('total')
                     ->label('Total')
                     ->suffix('DA')
@@ -89,10 +94,16 @@ class OrderResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date_retrait')
                     ->label('Retrait')
-                    ->dateTime('d/m/Y')
+                    ->date('d/m/Y')
+                    ->placeholder('À définir')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('creneau_retrait')
-                    ->label('Créneau'),
+                    ->label('Créneau')
+                    ->placeholder('À définir'),
+                Tables\Columns\TextColumn::make('recuperateur')
+                    ->label('Récupère')
+                    ->placeholder('—')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Commandé le')
                     ->dateTime('d/m/Y H:i')
