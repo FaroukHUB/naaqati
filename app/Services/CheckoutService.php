@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
 /**
- * Transforme le panier (session) en commande réelle :
- * cliente, commande, lignes (snapshots), réservation du stock.
+ * Transforme le panier multi-paquets en commande réelle :
+ * cliente, commande, paquets, lignes (snapshots), réservation du stock.
  */
 class CheckoutService
 {
@@ -29,63 +29,70 @@ class CheckoutService
             throw new RuntimeException('Votre panier est vide.');
         }
 
-        $lines = $this->cart->lines();
+        $packages = $this->cart->packages()->filter(fn ($p) => $p['lines']->isNotEmpty())->values();
         $relaisId = $this->relais->id();
+        $sousTotal = $this->cart->sousTotal();
+        $fraisTotal = $this->cart->fraisTotal();
+        $quantites = $this->cart->quantitesParProduit();
 
-        return DB::transaction(function () use ($infos, $lines, $relaisId) {
-            // 1. Cliente (retrouvée par téléphone, sinon créée).
+        return DB::transaction(function () use ($infos, $packages, $relaisId, $sousTotal, $fraisTotal, $quantites) {
+            // 1. Cliente.
             $customer = Customer::firstOrCreate(
                 ['telephone' => $infos['telephone']],
                 ['nom' => $infos['nom'], 'email' => $infos['email'] ?? null],
             );
-
-            // Mise à jour du nom/email si la cliente revient.
             $customer->fill([
                 'nom' => $infos['nom'],
                 'email' => $infos['email'] ?? $customer->email,
             ])->save();
 
             // 2. Commande.
-            $sousTotal = $this->cart->sousTotal();
-            $frais = $this->cart->fraisEmballage();
-
             $order = Order::create([
                 'customer_id' => $customer->id,
                 'relais_id' => $relaisId,
                 'devise_code' => $this->relais->devise(),
                 'sous_total' => $sousTotal,
-                'packaging_id' => $this->cart->packaging()?->id,
-                'frais_emballage' => $frais,
-                'total' => $sousTotal + $frais,
+                'packaging_id' => null,
+                'frais_emballage' => $fraisTotal,
+                'total' => $sousTotal + $fraisTotal,
                 'date_retrait' => $infos['date_retrait'],
                 'creneau_retrait' => $infos['creneau'],
                 'commentaire' => $infos['commentaire'] ?? null,
             ]);
 
-            // 3. Lignes (snapshots prix/nom figés).
-            $quantites = [];
-            foreach ($lines as $line) {
-                $order->items()->create([
-                    'product_id' => $line['product']->id,
-                    'nom_snapshot' => $line['product']->nom,
-                    'prix_unitaire' => $line['prix_unitaire'],
-                    'quantite' => $line['quantite'],
-                    'total_ligne' => $line['total_ligne'],
+            // 3. Paquets + lignes (snapshots).
+            foreach ($packages as $i => $pkg) {
+                $orderPackage = $order->packages()->create([
+                    'packaging_id' => $pkg['packaging_id'],
+                    'nom_destinataire' => $pkg['destinataire'],
+                    'message_cadeau' => $pkg['message'],
+                    'frais_emballage' => $pkg['frais'],
+                    'position' => $i + 1,
                 ]);
-                $quantites[$line['product']->id] = $line['quantite'];
+
+                foreach ($pkg['lines'] as $line) {
+                    $order->items()->create([
+                        'order_package_id' => $orderPackage->id,
+                        'product_id' => $line['product']->id,
+                        'nom_snapshot' => $line['product']->nom,
+                        'prix_unitaire' => $line['prix_unitaire'],
+                        'quantite' => $line['quantite'],
+                        'total_ligne' => $line['total_ligne'],
+                    ]);
+                }
             }
 
-            // 4. Réservation du stock (verrou anti-survente).
+            // 4. Réservation du stock (quantités cumulées par produit).
             $this->stock->reserverPourCommande($order, $quantites);
 
-            // 5. Historique : création.
+            // 5. Historique.
             $order->statusHistories()->create([
                 'ancien_statut' => null,
                 'nouveau_statut' => $order->statut,
                 'note' => 'Commande passée depuis la boutique',
             ]);
 
-            // 6. Agrégats cliente (CRM).
+            // 6. CRM.
             $customer->increment('nb_commandes');
             $customer->increment('total_depense', $order->total);
             $customer->update(['derniere_commande_at' => now()]);

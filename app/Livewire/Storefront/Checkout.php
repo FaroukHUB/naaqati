@@ -91,7 +91,7 @@ class Checkout extends Component
     public function render(CartService $cart, PickupService $pickup, CurrentRelais $relais)
     {
         return view('livewire.storefront.checkout', [
-            'lines' => $cart->lines(),
+            'packages' => $cart->packages(),
             'total' => $cart->total(),
             'dates' => $pickup->creneauxDisponibles($relais->id()),
         ]);

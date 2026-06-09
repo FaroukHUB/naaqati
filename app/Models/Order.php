@@ -55,6 +55,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function packages(): HasMany
+    {
+        return $this->hasMany(OrderPackage::class)->orderBy('position');
+    }
+
     public function statusHistories(): HasMany
     {
         return $this->hasMany(OrderStatusHistory::class);

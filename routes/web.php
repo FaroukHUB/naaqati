@@ -31,7 +31,9 @@ Route::post('/deconnexion', function () {
 })->name('shop.logout');
 Route::get('/mon-compte', AccountDashboard::class)->middleware('auth:customer')->name('shop.account');
 Route::get('/commande/{numero}/confirmation', function (string $numero) {
-    $order = Order::where('numero', $numero)->with(['customer', 'relais', 'items'])->firstOrFail();
+    $order = Order::where('numero', $numero)
+        ->with(['customer', 'relais', 'packages.packaging', 'packages.items'])
+        ->firstOrFail();
 
     return view('shop.confirmation', ['order' => $order]);
 })->name('shop.confirmation');

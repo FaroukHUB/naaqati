@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\OrderStatus;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers\OrderItemsRelationManager;
+use App\Filament\Resources\OrderResource\RelationManagers\PackagesRelationManager;
 use App\Models\Order;
 use App\Services\OrderService;
 use Filament\Forms;
@@ -151,6 +152,7 @@ class OrderResource extends Resource
     public static function getRelations(): array
     {
         return [
+            PackagesRelationManager::class,
             OrderItemsRelationManager::class,
         ];
     }

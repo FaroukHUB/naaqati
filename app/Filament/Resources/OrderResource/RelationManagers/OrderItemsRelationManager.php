@@ -4,20 +4,26 @@ namespace App\Filament\Resources\OrderResource\RelationManagers;
 
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 
 class OrderItemsRelationManager extends RelationManager
 {
     protected static string $relationship = 'items';
 
-    protected static ?string $title = 'Produits de la commande';
-
-    protected static ?string $modelLabel = 'ligne';
+    protected static ?string $title = 'Articles & paquets';
 
     public function table(Table $table): Table
     {
         return $table
             ->recordTitleAttribute('nom_snapshot')
+            ->modifyQueryUsing(fn ($query) => $query->with('orderPackage.packaging'))
+            ->groups([
+                Group::make('order_package_id')
+                    ->label('Paquet')
+                    ->getTitleFromRecordUsing(fn ($record) => $record->orderPackage?->libelle() ?? 'Sachet kraft'),
+            ])
+            ->defaultGroup('order_package_id')
             ->columns([
                 Tables\Columns\TextColumn::make('nom_snapshot')
                     ->label('Produit'),

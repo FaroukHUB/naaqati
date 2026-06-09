@@ -81,12 +81,24 @@
         <div class="lg:col-span-1">
             <div class="sticky top-20 rounded-2xl border border-stone-100 bg-white p-5 shadow-sm">
                 <h2 class="mb-4 text-base font-bold text-stone-900">Votre commande</h2>
-                <div class="space-y-2 text-sm">
-                    @foreach ($lines as $line)
-                        <div class="flex justify-between text-stone-600">
-                            <span class="truncate pr-2">{{ $line['quantite'] }}× {{ $line['product']->nom }}</span>
-                            <span class="shrink-0">{{ number_format($line['total_ligne'] / 100, 0, ',', ' ') }} DA</span>
-                        </div>
+                <div class="space-y-3 text-sm">
+                    @foreach ($packages as $package)
+                        @if ($package['lines']->isNotEmpty())
+                            <div>
+                                @if ($packages->count() > 1)
+                                    <p class="mb-1 text-xs font-semibold text-stone-500">
+                                        🎁 Paquet {{ $package['index'] }}{{ $package['destinataire'] ? ' · '.$package['destinataire'] : '' }}
+                                        @if ($package['packaging']) <span class="font-normal text-stone-400">({{ $package['packaging']->nom }})</span> @endif
+                                    </p>
+                                @endif
+                                @foreach ($package['lines'] as $line)
+                                    <div class="flex justify-between text-stone-600">
+                                        <span class="truncate pr-2">{{ $line['quantite'] }}× {{ $line['product']->nom }}</span>
+                                        <span class="shrink-0">{{ number_format($line['total_ligne'] / 100, 0, ',', ' ') }} DA</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                     @endforeach
                     <div class="my-3 border-t border-stone-100"></div>
                     <div class="flex justify-between text-base font-bold text-stone-900">

@@ -14,6 +14,28 @@
                 <div class="flex justify-between border-t border-stone-200 pt-3 text-base"><span class="font-bold text-stone-900">Total</span><span class="font-bold" style="color:#B76E79;">{{ number_format($order->total / 100, 0, ',', ' ') }} DA</span></div>
             </div>
 
+            {{-- Détail des paquets --}}
+            @if ($order->packages->isNotEmpty())
+                <div class="mt-6 space-y-3 text-left">
+                    @foreach ($order->packages as $pkg)
+                        <div class="rounded-xl border border-stone-100 p-3">
+                            <p class="text-sm font-semibold text-stone-800">
+                                🎁 {{ $pkg->packaging?->nom ?? 'Sachet kraft' }}
+                                @if ($pkg->nom_destinataire) <span class="font-normal text-stone-400">· pour {{ $pkg->nom_destinataire }}</span> @endif
+                            </p>
+                            <ul class="mt-1 text-xs text-stone-500">
+                                @foreach ($pkg->items as $it)
+                                    <li>{{ $it->quantite }}× {{ $it->nom_snapshot }}</li>
+                                @endforeach
+                            </ul>
+                            @if ($pkg->message_cadeau)
+                                <p class="mt-1 text-xs italic text-stone-400">« {{ $pkg->message_cadeau }} »</p>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
             <p class="mt-6 text-sm text-stone-500">
                 Nous préparons votre commande. Vous recevrez un message <strong>WhatsApp</strong> dès qu'elle sera prête à récupérer, avec l'adresse et le code d'accès.
             </p>
