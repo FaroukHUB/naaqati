@@ -17,16 +17,6 @@ use InvalidArgumentException;
  */
 class OrderService
 {
-    /** Transitions autorisées. */
-    private const TRANSITIONS = [
-        'recue' => ['en_preparation', 'annulee'],
-        'en_preparation' => ['prete', 'annulee'],
-        'prete' => ['recuperee', 'annulee'],
-        'recuperee' => ['terminee'],
-        'terminee' => [],
-        'annulee' => [],
-    ];
-
     public function __construct(private readonly StockService $stock) {}
 
     public function changerStatut(Order $order, OrderStatus $nouveau, ?string $note = null): Order
@@ -37,7 +27,7 @@ class OrderService
             return $order;
         }
 
-        if (! in_array($nouveau->value, self::TRANSITIONS[$ancien->value] ?? [], true)) {
+        if (! $ancien->peutAllerVers($nouveau)) {
             throw new InvalidArgumentException(
                 "Transition interdite : {$ancien->value} -> {$nouveau->value}."
             );

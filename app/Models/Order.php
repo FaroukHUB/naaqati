@@ -18,6 +18,10 @@ class Order extends Model
         'date_retrait', 'creneau_retrait', 'commentaire',
     ];
 
+    protected $attributes = [
+        'statut' => 'recue',
+    ];
+
     protected $casts = [
         'statut' => OrderStatus::class,
         'date_retrait' => 'date',

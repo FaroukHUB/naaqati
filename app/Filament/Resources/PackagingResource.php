@@ -52,6 +52,11 @@ class PackagingResource extends Resource
                 Forms\Components\Toggle::make('actif')
                     ->label('Emballage actif')
                     ->default(true),
+                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                    ->label('Photo de l\'emballage')
+                    ->collection('image')
+                    ->image()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -59,6 +64,10 @@ class PackagingResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
+                    ->label('Photo')
+                    ->collection('image')
+                    ->circular(),
                 Tables\Columns\TextColumn::make('nom')
                     ->label('Nom')
                     ->searchable()

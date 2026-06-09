@@ -47,4 +47,29 @@ enum OrderStatus: string
             fn (self $s) => [$s->value => $s->label()]
         )->all();
     }
+
+    /** Transitions de statut autorisées. */
+    public function transitionsAutorisees(): array
+    {
+        return match ($this) {
+            self::Recue => [self::EnPreparation, self::Annulee],
+            self::EnPreparation => [self::Prete, self::Annulee],
+            self::Prete => [self::Recuperee, self::Annulee],
+            self::Recuperee => [self::Terminee],
+            self::Terminee, self::Annulee => [],
+        };
+    }
+
+    public function peutAllerVers(self $cible): bool
+    {
+        return in_array($cible, $this->transitionsAutorisees(), true);
+    }
+
+    /** Options [valeur => libellé] des statuts suivants possibles. */
+    public function optionsSuivantes(): array
+    {
+        return collect($this->transitionsAutorisees())
+            ->mapWithKeys(fn (self $s) => [$s->value => $s->label()])
+            ->all();
+    }
 }

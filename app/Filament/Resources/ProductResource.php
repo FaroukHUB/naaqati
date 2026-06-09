@@ -62,6 +62,13 @@ class ProductResource extends Resource
                 Forms\Components\Toggle::make('actif')
                     ->label('Produit actif')
                     ->default(true),
+                Forms\Components\SpatieMediaLibraryFileUpload::make('images')
+                    ->label('Photos du produit')
+                    ->collection('images')
+                    ->image()
+                    ->multiple()
+                    ->reorderable()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -69,6 +76,11 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('images')
+                    ->label('Photo')
+                    ->collection('images')
+                    ->limit(1)
+                    ->circular(),
                 Tables\Columns\TextColumn::make('nom')
                     ->label('Nom')
                     ->searchable()

@@ -4,9 +4,12 @@ namespace App\Filament\Resources;
 
 use App\Enums\OrderStatus;
 use App\Filament\Resources\OrderResource\Pages;
+use App\Filament\Resources\OrderResource\RelationManagers\OrderItemsRelationManager;
 use App\Models\Order;
+use App\Services\OrderService;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -100,9 +103,56 @@ class OrderResource extends Resource
                     ->options(OrderStatus::options()),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->label('Gérer'),
+                Tables\Actions\Action::make('changerStatut')
+                    ->label('Statut')
+                    ->icon('heroicon-o-arrow-path')
+                    ->color('warning')
+                    ->visible(fn (Order $record) => $record->statut->transitionsAutorisees() !== [])
+                    ->form([
+                        Forms\Components\Select::make('statut')
+                            ->label('Nouveau statut')
+                            ->options(fn (Order $record) => $record->statut->optionsSuivantes())
+                            ->required(),
+                        Forms\Components\Textarea::make('note')
+                            ->label('Note (optionnel)')
+                            ->rows(2),
+                    ])
+                    ->action(function (Order $record, array $data) {
+                        try {
+                            app(OrderService::class)->changerStatut(
+                                $record,
+                                OrderStatus::from($data['statut']),
+                                $data['note'] ?? null,
+                            );
+                            Notification::make()
+                                ->title('Statut mis à jour')
+                                ->success()
+                                ->send();
+                        } catch (\Throwable $e) {
+                            Notification::make()
+                                ->title('Action impossible')
+                                ->body($e->getMessage())
+                                ->danger()
+                                ->send();
+                        }
+                    }),
+                Tables\Actions\Action::make('whatsapp')
+                    ->label('WhatsApp')
+                    ->icon('heroicon-o-chat-bubble-left-right')
+                    ->color('success')
+                    ->visible(fn (Order $record) => $record->statut === OrderStatus::Prete)
+                    ->url(fn (Order $record) => route('admin.orders.whatsapp', $record))
+                    ->openUrlInNewTab(),
+                Tables\Actions\EditAction::make()->label('Voir'),
             ])
             ->defaultSort('created_at', 'desc');
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            OrderItemsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
