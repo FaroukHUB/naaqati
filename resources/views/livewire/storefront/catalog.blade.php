@@ -97,7 +97,7 @@
                         $image = $produit->getFirstMediaUrl('images');
                     @endphp
                     <div class="group flex flex-col overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm transition hover:shadow-md">
-                        <div class="aspect-square w-full overflow-hidden bg-stone-100">
+                        <a href="{{ route('shop.product', $produit->slug) }}" wire:navigate class="block aspect-square w-full overflow-hidden bg-stone-100">
                             @if ($image)
                                 <img src="{{ $image }}" alt="{{ $produit->nom }}" class="h-full w-full object-cover transition group-hover:scale-105">
                             @else
@@ -105,10 +105,10 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
                                 </div>
                             @endif
-                        </div>
+                        </a>
                         <div class="flex flex-1 flex-col p-3">
                             <p class="text-xs text-stone-400">{{ $produit->category->nom }}</p>
-                            <h3 class="text-sm font-semibold leading-tight text-stone-800">{{ $produit->nom }}</h3>
+                            <a href="{{ route('shop.product', $produit->slug) }}" wire:navigate class="text-sm font-semibold leading-tight text-stone-800 hover:underline">{{ $produit->nom }}</a>
                             <p class="mt-1 text-base font-bold" style="color:#B76E79;">
                                 {{ number_format($prix / 100, 0, ',', ' ') }} DA
                             </p>

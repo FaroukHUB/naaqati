@@ -4,11 +4,13 @@ use App\Http\Controllers\Admin\OrderWhatsappController;
 use App\Livewire\Storefront\CartPage;
 use App\Livewire\Storefront\Catalog;
 use App\Livewire\Storefront\Checkout;
+use App\Livewire\Storefront\ProductDetail;
 use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 
 // --- Boutique cliente (tunnel de commande) ---
 Route::get('/', Catalog::class)->name('shop.catalog');
+Route::get('/produit/{slug}', ProductDetail::class)->name('shop.product');
 Route::get('/panier', CartPage::class)->name('shop.cart');
 Route::get('/commande', Checkout::class)->name('shop.checkout');
 Route::get('/assistante', fn () => view('shop.assistante'))->name('shop.assistante');
