@@ -34,7 +34,7 @@
         <div class="mb-5">
             <input type="search" wire:model.live.debounce.400ms="search"
                    placeholder="Rechercher un produit…"
-                   class="w-full rounded-2xl border-stone-200 bg-white px-4 py-3 text-sm shadow-sm focus:border-stone-300 focus:ring-0">
+                   class="w-full rounded-2xl border-2 border-stone-200 bg-white px-4 py-3 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#B76E79]">
         </div>
 
         @if ($categories->isEmpty())
@@ -80,7 +80,7 @@
         <div class="mb-5">
             <input type="search" wire:model.live.debounce.400ms="search"
                    placeholder="Rechercher un produit…"
-                   class="w-full rounded-2xl border-stone-200 bg-white px-4 py-3 text-sm shadow-sm focus:border-stone-300 focus:ring-0">
+                   class="w-full rounded-2xl border-2 border-stone-200 bg-white px-4 py-3 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#B76E79]">
         </div>
 
         @if ($produits->isEmpty())
