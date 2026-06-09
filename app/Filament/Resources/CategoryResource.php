@@ -3,38 +3,49 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
+
+    protected static ?string $navigationGroup = 'Catalogue';
+
+    protected static ?int $navigationSort = 2;
+
+    protected static ?string $modelLabel = 'Catégorie';
+
+    protected static ?string $pluralModelLabel = 'Catégories';
+
+    protected static ?string $recordTitleAttribute = 'nom';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nom')
-                    ->required(),
-                Forms\Components\TextInput::make('slug')
-                    ->required(),
-                Forms\Components\Select::make('parent_id')
-                    ->relationship('parent', 'id'),
-                Forms\Components\TextInput::make('position')
+                    ->label('Nom de la catégorie')
                     ->required()
+                    ->maxLength(255),
+                Forms\Components\Select::make('parent_id')
+                    ->label('Catégorie parente (optionnel)')
+                    ->relationship('parent', 'nom')
+                    ->searchable()
+                    ->preload(),
+                Forms\Components\TextInput::make('position')
+                    ->label('Ordre d\'affichage')
                     ->numeric()
                     ->default(0),
                 Forms\Components\Toggle::make('actif')
-                    ->required(),
+                    ->label('Catégorie active')
+                    ->default(true),
             ]);
     }
 
@@ -43,44 +54,32 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('nom')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('parent.id')
-                    ->numeric()
+                    ->label('Nom')
+                    ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('parent.nom')
+                    ->label('Catégorie parente')
+                    ->placeholder('—'),
                 Tables\Columns\TextColumn::make('position')
-                    ->numeric()
+                    ->label('Ordre')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('actif')
+                    ->label('Active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TernaryFilter::make('actif')
+                    ->label('Active'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Modifier'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Supprimer'),
                 ]),
-            ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+            ])
+            ->defaultSort('position');
     }
 
     public static function getPages(): array

@@ -2,42 +2,56 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\PackagingType;
 use App\Filament\Resources\PackagingResource\Pages;
-use App\Filament\Resources\PackagingResource\RelationManagers;
 use App\Models\Packaging;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PackagingResource extends Resource
 {
     protected static ?string $model = Packaging::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-gift';
+
+    protected static ?string $navigationGroup = 'Catalogue';
+
+    protected static ?int $navigationSort = 3;
+
+    protected static ?string $modelLabel = 'Emballage';
+
+    protected static ?string $pluralModelLabel = 'Emballages';
+
+    protected static ?string $recordTitleAttribute = 'nom';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nom')
-                    ->required(),
-                Forms\Components\TextInput::make('type')
+                    ->label('Nom de l\'emballage')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Select::make('type')
+                    ->label('Type')
+                    ->options(PackagingType::options())
                     ->required(),
                 Forms\Components\TextInput::make('prix')
-                    ->required()
+                    ->label('Prix')
                     ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('devise_code')
-                    ->required(),
-                Forms\Components\TextInput::make('couleur'),
-                Forms\Components\Select::make('relais_id')
-                    ->relationship('relais', 'id'),
+                    ->default(0)
+                    ->suffix('DA')
+                    ->formatStateUsing(fn ($state) => $state !== null ? $state / 100 : 0)
+                    ->dehydrateStateUsing(fn ($state) => (int) round(((float) $state) * 100)),
+                Forms\Components\TextInput::make('couleur')
+                    ->label('Couleur (optionnel)')
+                    ->maxLength(40),
                 Forms\Components\Toggle::make('actif')
-                    ->required(),
+                    ->label('Emballage actif')
+                    ->default(true),
             ]);
     }
 
@@ -46,52 +60,37 @@ class PackagingResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('nom')
-                    ->searchable(),
+                    ->label('Nom')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('type')
-                    ->searchable(),
+                    ->label('Type')
+                    ->badge()
+                    ->formatStateUsing(fn (PackagingType $state) => $state->label()),
                 Tables\Columns\TextColumn::make('prix')
-                    ->numeric()
+                    ->label('Prix')
+                    ->money('DZD', divideBy: 100)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('devise_code')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('couleur')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('relais.id')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Couleur')
+                    ->placeholder('—'),
                 Tables\Columns\IconColumn::make('actif')
+                    ->label('Actif')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TernaryFilter::make('actif')
+                    ->label('Actif'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Modifier'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Supprimer'),
                 ]),
-            ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+            ])
+            ->defaultSort('nom');
     }
 
     public static function getPages(): array

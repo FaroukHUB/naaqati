@@ -3,45 +3,65 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-cube';
+
+    protected static ?string $navigationGroup = 'Catalogue';
+
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $modelLabel = 'Produit';
+
+    protected static ?string $pluralModelLabel = 'Produits';
+
+    protected static ?string $recordTitleAttribute = 'nom';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nom')
-                    ->required(),
-                Forms\Components\TextInput::make('slug')
-                    ->required(),
-                Forms\Components\TextInput::make('desc_courte'),
-                Forms\Components\Textarea::make('desc_longue')
-                    ->columnSpanFull(),
-                Forms\Components\Select::make('category_id')
-                    ->relationship('category', 'id')
-                    ->required(),
-                Forms\Components\TextInput::make('poids_grammes')
-                    ->numeric(),
-                Forms\Components\TextInput::make('prix_base')
+                    ->label('Nom du produit')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('devise_code')
+                    ->maxLength(255),
+                Forms\Components\Select::make('category_id')
+                    ->label('Catégorie')
+                    ->relationship('category', 'nom')
+                    ->searchable()
+                    ->preload()
                     ->required(),
+                Forms\Components\TextInput::make('prix_base')
+                    ->label('Prix')
+                    ->numeric()
+                    ->required()
+                    ->suffix('DA')
+                    ->formatStateUsing(fn ($state) => $state !== null ? $state / 100 : null)
+                    ->dehydrateStateUsing(fn ($state) => (int) round(((float) $state) * 100)),
+                Forms\Components\TextInput::make('poids_grammes')
+                    ->label('Poids (grammes)')
+                    ->numeric()
+                    ->suffix('g'),
+                Forms\Components\TextInput::make('desc_courte')
+                    ->label('Description courte')
+                    ->maxLength(500)
+                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('desc_longue')
+                    ->label('Description longue')
+                    ->rows(5)
+                    ->columnSpanFull(),
                 Forms\Components\Toggle::make('actif')
-                    ->required(),
+                    ->label('Produit actif')
+                    ->default(true),
             ]);
     }
 
@@ -50,55 +70,42 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('nom')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('desc_courte')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('category.id')
-                    ->numeric()
+                    ->label('Nom')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('poids_grammes')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('category.nom')
+                    ->label('Catégorie')
+                    ->badge()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('prix_base')
-                    ->numeric()
+                    ->label('Prix')
+                    ->money('DZD', divideBy: 100)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('devise_code')
-                    ->searchable(),
                 Tables\Columns\IconColumn::make('actif')
+                    ->label('Actif')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->label('Créé le')
+                    ->dateTime('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('category_id')
+                    ->label('Catégorie')
+                    ->relationship('category', 'nom'),
+                Tables\Filters\TernaryFilter::make('actif')
+                    ->label('Actif'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Modifier'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Supprimer'),
                 ]),
-            ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+            ])
+            ->defaultSort('nom');
     }
 
     public static function getPages(): array

@@ -3,48 +3,66 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\InventoryResource\Pages;
-use App\Filament\Resources\InventoryResource\RelationManagers;
 use App\Models\Inventory;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class InventoryResource extends Resource
 {
     protected static ?string $model = Inventory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-archive-box';
+
+    protected static ?string $navigationGroup = 'Stock';
+
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $modelLabel = 'Stock';
+
+    protected static ?string $pluralModelLabel = 'Stocks';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('product_id')
-                    ->relationship('product', 'id')
-                    ->required(),
-                Forms\Components\Select::make('relais_id')
-                    ->relationship('relais', 'id')
+                    ->label('Produit')
+                    ->relationship('product', 'nom')
+                    ->searchable()
+                    ->preload()
                     ->required(),
                 Forms\Components\TextInput::make('stock_disponible')
-                    ->required()
+                    ->label('Stock disponible')
                     ->numeric()
-                    ->default(0),
+                    ->default(0)
+                    ->required()
+                    ->helperText('Quantité vendable. Pour un ajustement précis, on branchera bientôt l\'action « Ajustement » (journal des mouvements).'),
                 Forms\Components\TextInput::make('stock_reserve')
-                    ->required()
+                    ->label('Stock réservé')
                     ->numeric()
-                    ->default(0),
+                    ->default(0)
+                    ->disabled()
+                    ->dehydrated(false)
+                    ->helperText('Géré automatiquement par les commandes.'),
                 Forms\Components\TextInput::make('stock_vendu')
-                    ->required()
+                    ->label('Stock vendu')
                     ->numeric()
-                    ->default(0),
+                    ->default(0)
+                    ->disabled()
+                    ->dehydrated(false)
+                    ->helperText('Géré automatiquement par les commandes.'),
                 Forms\Components\TextInput::make('prix_override')
-                    ->numeric(),
+                    ->label('Prix spécifique à ce relais (optionnel)')
+                    ->numeric()
+                    ->suffix('DA')
+                    ->formatStateUsing(fn ($state) => $state !== null ? $state / 100 : null)
+                    ->dehydrateStateUsing(fn ($state) => $state !== null && $state !== '' ? (int) round(((float) $state) * 100) : null),
                 Forms\Components\Toggle::make('actif')
-                    ->required(),
+                    ->label('Actif')
+                    ->default(true),
             ]);
     }
 
@@ -52,53 +70,37 @@ class InventoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('product.id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('product.nom')
+                    ->label('Produit')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('relais.id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('relais.nom')
+                    ->label('Point relais')
+                    ->badge(),
                 Tables\Columns\TextColumn::make('stock_disponible')
-                    ->numeric()
+                    ->label('Disponible')
+                    ->badge()
+                    ->color(fn (int $state) => $state > 0 ? 'success' : 'danger')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('stock_reserve')
-                    ->numeric()
+                    ->label('Réservé')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('stock_vendu')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('prix_override')
-                    ->numeric()
+                    ->label('Vendu')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('actif')
+                    ->label('Actif')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('rupture')
+                    ->label('En rupture')
+                    ->query(fn ($query) => $query->where('stock_disponible', '<=', 0)),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Modifier'),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+            ->defaultSort('product_id');
     }
 
     public static function getPages(): array
