@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', Catalog::class)->name('shop.catalog');
 Route::get('/panier', CartPage::class)->name('shop.cart');
 Route::get('/commande', Checkout::class)->name('shop.checkout');
+Route::get('/assistante', fn () => view('shop.assistante'))->name('shop.assistante');
 Route::get('/commande/{numero}/confirmation', function (string $numero) {
     $order = Order::where('numero', $numero)->with(['customer', 'relais', 'items'])->firstOrFail();
 

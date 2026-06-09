@@ -9,10 +9,11 @@
         <span x-text="toast"></span>
     </div>
 
-    {{-- Titre + recherche --}}
-    <div class="mb-5">
-        <h1 class="text-2xl font-bold text-stone-900">Nos produits</h1>
-        <p class="text-sm text-stone-500">Choisissez vos produits, puis venez les récupérer à Riadi City.</p>
+    {{-- Bannière d'accueil --}}
+    <div class="mb-5 overflow-hidden rounded-3xl px-6 py-7 text-white shadow-sm" style="background:linear-gradient(135deg,#C98B96 0%,#B76E79 45%,#9B5563 100%);">
+        <p class="text-xs font-medium uppercase tracking-wider text-white/70">Cosmétiques naturels</p>
+        <h1 class="mt-1 text-2xl font-extrabold leading-tight">Bienvenue chez Naaqati</h1>
+        <p class="mt-1 text-sm text-white/90">Choisissez vos produits, récupérez-les à Riadi City. 🌿</p>
     </div>
 
     <div class="mb-5">
