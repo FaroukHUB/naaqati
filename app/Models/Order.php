@@ -7,10 +7,20 @@ use App\Support\Scopes\BelongsToRelais;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
     use BelongsToRelais;
+
+    protected static function booted(): void
+    {
+        static::creating(function (Order $order) {
+            if (empty($order->numero)) {
+                $order->numero = 'NQ-' . now()->format('Ymd') . '-' . strtoupper(Str::random(4));
+            }
+        });
+    }
 
     protected $fillable = [
         'numero', 'customer_id', 'relais_id', 'statut', 'devise_code',
