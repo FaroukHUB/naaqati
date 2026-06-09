@@ -38,33 +38,54 @@
         {{ $slot }}
     </main>
 
+    <footer class="mt-12 border-t border-stone-200 py-8 text-center text-xs text-stone-400">
+        <div class="mb-6">
+            <livewire:newsletter-form />
+        </div>
+        <p>Naaqati — Point relais Riadi City · Retrait sur place</p>
+    </footer>
+
+    @php
+        $tab = 'flex flex-col items-center gap-0.5 py-2.5 text-[11px] font-medium';
+        $loggedIn = auth('customer')->check();
+    @endphp
     {{-- Bandeau de navigation bas (app mobile) --}}
     <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-stone-200 bg-white/95 backdrop-blur"
          style="padding-bottom: env(safe-area-inset-bottom);">
-        <div class="mx-auto max-w-3xl grid grid-cols-3 items-end px-6">
+        <div class="mx-auto grid max-w-3xl grid-cols-4 px-2">
             {{-- Accueil --}}
-            <a href="{{ route('shop.catalog') }}" @class(['flex flex-col items-center gap-0.5 py-2.5 text-[11px] font-medium', 'text-stone-400' => !request()->routeIs('shop.catalog'), '' => request()->routeIs('shop.catalog')])
-               @style(['color:#B76E79' => request()->routeIs('shop.catalog')])>
+            <a href="{{ route('shop.catalog') }}" wire:navigate
+               @class([$tab, 'text-stone-400' => !request()->routeIs(['shop.catalog', 'shop.product'])])
+               @style(['color:#B76E79' => request()->routeIs(['shop.catalog', 'shop.product'])])>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75"/></svg>
                 Accueil
             </a>
 
-            {{-- Assistante (mise en avant, centre) --}}
-            <a href="{{ route('shop.assistante') }}" class="flex flex-col items-center -mt-5">
-                <span class="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg ring-4 ring-stone-50" style="background:linear-gradient(135deg,#C98B96,#9B5563);">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10.5h8M8 14h5m-9 6l3.5-2H17a3 3 0 003-3V7a3 3 0 00-3-3H7a3 3 0 00-3 3v13z"/></svg>
-                </span>
-                <span class="mt-1 text-[11px] font-semibold" style="color:#B76E79;">Assistante</span>
+            {{-- Assistante --}}
+            <a href="{{ route('shop.assistante') }}"
+               @class([$tab, 'text-stone-400' => !request()->routeIs('shop.assistante')])
+               @style(['color:#B76E79' => request()->routeIs('shop.assistante')])>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10.5h8M8 14h5m-9 6l3.5-2H17a3 3 0 003-3V7a3 3 0 00-3-3H7a3 3 0 00-3 3v13z"/></svg>
+                Assistante
             </a>
 
             {{-- Panier --}}
-            <a href="{{ route('shop.cart') }}" @class(['relative flex flex-col items-center gap-0.5 py-2.5 text-[11px] font-medium', 'text-stone-400' => !request()->routeIs('shop.cart')])
+            <a href="{{ route('shop.cart') }}" wire:navigate
+               @class([$tab, 'text-stone-400' => !request()->routeIs('shop.cart')])
                @style(['color:#B76E79' => request()->routeIs('shop.cart')])>
                 <span class="relative">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
                     <livewire:storefront.cart-counter />
                 </span>
                 Panier
+            </a>
+
+            {{-- Compte --}}
+            <a href="{{ $loggedIn ? route('shop.account') : route('shop.login') }}"
+               @class([$tab, 'text-stone-400' => !request()->routeIs(['shop.account', 'shop.login', 'shop.register'])])
+               @style(['color:#B76E79' => request()->routeIs(['shop.account', 'shop.login', 'shop.register'])])>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                {{ $loggedIn ? 'Compte' : 'Connexion' }}
             </a>
         </div>
     </nav>

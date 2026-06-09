@@ -30,6 +30,13 @@ class Checkout extends Component
         if ($cart->isEmpty()) {
             return redirect()->route('shop.catalog');
         }
+
+        // Pré-remplissage si la cliente est connectée.
+        if ($c = auth('customer')->user()) {
+            $this->nom = $c->nom;
+            $this->telephone = $c->telephone;
+            $this->email = (string) $c->email;
+        }
     }
 
     public function selectDate(string $date): void

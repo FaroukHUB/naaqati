@@ -11,7 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // Les invités non connectés sur les pages "client" sont renvoyés vers la connexion.
+        $middleware->redirectGuestsTo(fn () => route('shop.login'));
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
