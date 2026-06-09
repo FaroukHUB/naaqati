@@ -40,15 +40,55 @@
 
                 {{-- Emballage --}}
                 <div class="rounded-2xl border border-stone-100 bg-white p-4 shadow-sm">
-                    <label class="mb-2 block text-sm font-semibold text-stone-700">Emballage</label>
-                    <select wire:model.live="packagingId" class="w-full rounded-xl border-stone-200 text-sm focus:border-stone-300 focus:ring-0">
-                        <option value="">Sachet kraft (gratuit)</option>
+                    <label class="mb-3 block text-sm font-semibold text-stone-700">Emballage</label>
+                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                        {{-- Option par défaut : sachet kraft gratuit --}}
+                        <button type="button" wire:click="choisirEmballage(null)"
+                                @class([
+                                    'group relative overflow-hidden rounded-xl border-2 p-3 text-left transition',
+                                    'bg-white border-stone-200 hover:border-stone-300' => $packagingId !== null,
+                                ])
+                                @style(['border-color:#B76E79;background-color:#FBF1F3' => $packagingId === null])>
+                            <div class="flex h-16 items-center justify-center rounded-lg bg-stone-100 text-stone-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg>
+                            </div>
+                            <p class="mt-2 text-xs font-semibold text-stone-800">Sachet kraft</p>
+                            <p class="text-[11px] text-stone-400">Gratuit</p>
+                            @if ($packagingId === null)
+                                <span class="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full text-white" style="background-color:#B76E79;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                </span>
+                            @endif
+                        </button>
+
+                        {{-- Emballages payants --}}
                         @foreach ($emballages as $emb)
-                            <option value="{{ $emb->id }}">
-                                {{ $emb->nom }} @if ($emb->prix > 0) (+{{ number_format($emb->prix / 100, 0, ',', ' ') }} DA) @else (gratuit) @endif
-                            </option>
+                            @php $embImg = $emb->getFirstMediaUrl('image'); @endphp
+                            <button type="button" wire:click="choisirEmballage({{ $emb->id }})"
+                                    @class([
+                                        'group relative overflow-hidden rounded-xl border-2 p-3 text-left transition',
+                                        'bg-white border-stone-200 hover:border-stone-300' => $packagingId !== $emb->id,
+                                    ])
+                                    @style(['border-color:#B76E79;background-color:#FBF1F3' => $packagingId === $emb->id])>
+                                <div class="h-16 overflow-hidden rounded-lg bg-stone-100">
+                                    @if ($embImg)
+                                        <img src="{{ $embImg }}" alt="{{ $emb->nom }}" class="h-full w-full object-cover">
+                                    @else
+                                        <div class="flex h-full w-full items-center justify-center text-stone-300">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>
+                                        </div>
+                                    @endif
+                                </div>
+                                <p class="mt-2 truncate text-xs font-semibold text-stone-800">{{ $emb->nom }}</p>
+                                <p class="text-[11px] text-stone-400">{{ $emb->prix > 0 ? '+' . number_format($emb->prix / 100, 0, ',', ' ') . ' DA' : 'Gratuit' }}</p>
+                                @if ($packagingId === $emb->id)
+                                    <span class="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full text-white" style="background-color:#B76E79;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                    </span>
+                                @endif
+                            </button>
                         @endforeach
-                    </select>
+                    </div>
                 </div>
             </div>
 

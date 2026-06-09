@@ -35,6 +35,12 @@ class CartPage extends Component
         $cart->setPackaging($this->packagingId ?: null);
     }
 
+    public function choisirEmballage(?int $id, CartService $cart): void
+    {
+        $this->packagingId = $id;
+        $cart->setPackaging($id ?: null);
+    }
+
     public function commander()
     {
         return redirect()->route('shop.checkout');
@@ -46,6 +52,7 @@ class CartPage extends Component
 
         $emballages = Packaging::where('actif', true)
             ->where(fn ($q) => $q->whereNull('relais_id')->orWhere('relais_id', $relaisId))
+            ->with('media')
             ->orderBy('prix')
             ->get();
 
