@@ -17,7 +17,17 @@
             <a href="{{ route('shop.catalog') }}" wire:navigate class="mt-4 inline-block rounded-xl px-5 py-2.5 text-sm font-semibold text-white" style="background-color:#B76E79;">Voir les produits</a>
         </div>
     @else
-        <p class="mb-5 text-sm text-stone-500">Vous offrez à plusieurs personnes ? Créez un paquet par destinataire, chacun avec son emballage. 🎁</p>
+        <div class="mb-6 flex items-start gap-4 rounded-2xl border border-[#E8C9D0] bg-gradient-to-br from-[#FBF1F3] to-white p-4 sm:p-5 shadow-sm">
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white shadow-sm" style="background:linear-gradient(135deg,#C98B96,#9B5563);">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>
+            </div>
+            <div>
+                <h2 class="text-sm font-bold text-stone-800">Une commande, plusieurs attentions</h2>
+                <p class="mt-1 text-sm leading-relaxed text-stone-500">
+                    Vous souhaitez faire plaisir à plusieurs personnes ? Composez un paquet pour chacune : répartissez vos produits, choisissez l'emballage qui convient — coffret, boîte ou sachet — et ajoutez un petit mot. Chaque cadeau sera préparé avec soin, prêt à offrir.
+                </p>
+            </div>
+        </div>
 
         <div class="grid gap-6 lg:grid-cols-3">
             <div class="space-y-5 lg:col-span-2">
