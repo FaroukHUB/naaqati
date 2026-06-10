@@ -51,6 +51,11 @@ class Product extends Model implements HasMedia
         return $this->hasMany(Inventory::class);
     }
 
+    public function concerns(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Concern::class, 'concern_product');
+    }
+
     /** Inventaire pour le relais courant (V1 = Riadi City). */
     public function inventoryForCurrentRelais(): ?Inventory
     {

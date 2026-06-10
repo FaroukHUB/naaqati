@@ -45,11 +45,10 @@
         {{ $slot }}
     </main>
 
-    <footer class="mt-12 border-t border-stone-200 py-8 text-center text-xs text-stone-400">
-        <div class="mb-6">
-            <livewire:newsletter-form />
-        </div>
-        <p>Naaqati — Point relais Riadi City · Retrait sur place</p>
+    <footer class="mt-12 border-t border-[#EADFCE] bg-[#FBF7F0] py-8 text-center text-xs text-stone-400">
+        <p class="font-semibold tracking-[0.2em] text-[#A1763C]">NAAQATI</p>
+        <p class="mt-1">Produits du Sahara · Point relais Riadi City</p>
+        <p class="mt-1">Retrait sur place · Paiement à la récupération</p>
     </footer>
 
     @php

@@ -59,6 +59,13 @@ class ProductResource extends Resource
                     ->label('Description longue')
                     ->rows(5)
                     ->columnSpanFull(),
+                Forms\Components\Select::make('concerns')
+                    ->label('Besoins (recherche par besoin)')
+                    ->relationship('concerns', 'nom')
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->columnSpanFull(),
                 Forms\Components\Toggle::make('actif')
                     ->label('Produit actif')
                     ->default(true),

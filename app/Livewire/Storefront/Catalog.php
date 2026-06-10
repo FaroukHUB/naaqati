@@ -3,7 +3,10 @@
 namespace App\Livewire\Storefront;
 
 use App\Models\Category;
+use App\Models\Concern;
+use App\Models\HeroSlide;
 use App\Models\Product;
+use App\Models\Testimonial;
 use App\Services\CartService;
 use App\Support\CurrentRelais;
 use Livewire\Attributes\Layout;
@@ -15,6 +18,9 @@ class Catalog extends Component
 {
     #[Url(as: 'cat')]
     public ?int $categoryId = null;
+
+    #[Url(as: 'besoin')]
+    public ?string $besoin = null;
 
     #[Url(as: 'q')]
     public string $search = '';
@@ -28,42 +34,53 @@ class Catalog extends Component
 
     public function ouvrirCategorie(int $categoryId): void
     {
+        $this->reset(['besoin', 'search']);
         $this->categoryId = $categoryId;
-        $this->search = '';
+    }
+
+    public function ouvrirBesoin(string $slug): void
+    {
+        $this->reset(['categoryId', 'search']);
+        $this->besoin = $slug;
     }
 
     public function retour(): void
     {
-        $this->categoryId = null;
-        $this->search = '';
+        $this->reset(['categoryId', 'besoin', 'search']);
     }
 
     public function render(CurrentRelais $relais)
     {
         $relaisId = $relais->id();
-
-        // Contrainte « produit disponible sur ce relais ».
         $dispoSurRelais = fn ($q) => $q->where('relais_id', $relaisId)->where('actif', true);
 
-        $modeProduits = $this->categoryId !== null || $this->search !== '';
+        $modeProduits = $this->categoryId !== null || $this->besoin !== null || $this->search !== '';
 
         $produits = collect();
         $categories = collect();
         $currentCategory = null;
+        $currentConcern = null;
+        $heroSlides = collect();
+        $enAvant = collect();
+        $concerns = collect();
+        $avis = collect();
 
         if ($modeProduits) {
+            $currentConcern = $this->besoin ? Concern::where('slug', $this->besoin)->first() : null;
+            $currentCategory = $this->categoryId ? Category::find($this->categoryId) : null;
+
             $produits = Product::query()
                 ->where('actif', true)
                 ->whereHas('inventories', $dispoSurRelais)
                 ->when($this->categoryId, fn ($q) => $q->where('category_id', $this->categoryId))
+                ->when($currentConcern, fn ($q) => $q->whereHas('concerns', fn ($c) => $c->where('concerns.id', $currentConcern->id)))
                 ->when($this->search !== '', fn ($q) => $q->where('nom', 'like', '%' . $this->search . '%'))
                 ->with(['inventories' => fn ($q) => $q->where('relais_id', $relaisId), 'media', 'category'])
                 ->orderBy('nom')
                 ->get();
-
-            $currentCategory = $this->categoryId ? Category::find($this->categoryId) : null;
         } else {
-            // Grille des catégories ayant au moins un produit disponible.
+            $heroSlides = HeroSlide::where('actif', true)->with('media')->orderBy('position')->get();
+
             $categories = Category::query()
                 ->where('actif', true)
                 ->whereHas('products', fn ($q) => $q->where('actif', true)->whereHas('inventories', $dispoSurRelais))
@@ -71,6 +88,21 @@ class Catalog extends Component
                 ->with('media')
                 ->orderBy('position')
                 ->get();
+
+            $enAvant = Product::query()
+                ->where('actif', true)
+                ->whereHas('inventories', $dispoSurRelais)
+                ->with(['inventories' => fn ($q) => $q->where('relais_id', $relaisId), 'media', 'category'])
+                ->latest()
+                ->take(8)
+                ->get();
+
+            $concerns = Concern::where('actif', true)
+                ->whereHas('products', fn ($q) => $q->where('actif', true)->whereHas('inventories', $dispoSurRelais))
+                ->orderBy('position')
+                ->get();
+
+            $avis = Testimonial::where('actif', true)->orderBy('position')->get();
         }
 
         return view('livewire.storefront.catalog', [
@@ -78,6 +110,11 @@ class Catalog extends Component
             'produits' => $produits,
             'categories' => $categories,
             'currentCategory' => $currentCategory,
+            'currentConcern' => $currentConcern,
+            'heroSlides' => $heroSlides,
+            'enAvant' => $enAvant,
+            'concerns' => $concerns,
+            'avis' => $avis,
             'relaisId' => $relaisId,
         ]);
     }
