@@ -12,7 +12,7 @@ class Relais extends Model
 
     protected $fillable = [
         'city_id', 'nom', 'slug', 'adresse', 'batiment', 'code_portail',
-        'etage', 'telephone', 'devise_code', 'actif', 'settings',
+        'etage', 'instructions_acces', 'telephone', 'devise_code', 'actif', 'settings',
     ];
 
     protected $casts = [

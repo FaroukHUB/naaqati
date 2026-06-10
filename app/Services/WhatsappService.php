@@ -42,6 +42,7 @@ class WhatsappService
             'batiment' => $relais?->batiment,
             'code_portail' => $relais?->code_portail,
             'etage' => $relais?->etage,
+            'instructions' => $relais?->instructions_acces,
             'date' => $order->date_retrait?->format('d/m/Y'),
             'creneau' => $order->creneau_retrait,
         ];
