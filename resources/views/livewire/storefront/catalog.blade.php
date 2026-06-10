@@ -153,7 +153,35 @@
             </section>
         @endif
 
-        {{-- 6. ASSISTANTE NAAQATI --}}
+        {{-- 6. AVIS CLIENTES --}}
+        @if ($avis->isNotEmpty())
+            <section class="mb-12 overflow-hidden rounded-3xl border border-[#EADFCE] p-6 sm:p-8" style="background:radial-gradient(120% 120% at 0% 0%, #FBF7F0 0%, #FFFFFF 55%);">
+                <div class="mb-6 text-center">
+                    <span class="text-xs font-semibold uppercase tracking-[0.2em]" style="color:#A1763C;">Avis clientes</span>
+                    <h2 class="mt-1 text-xl font-extrabold text-stone-900">Elles adorent Naaqati</h2>
+                </div>
+                <div class="-mx-2 flex snap-x snap-mandatory gap-4 overflow-x-auto px-2 pb-2">
+                    @foreach ($avis as $a)
+                        <figure class="relative w-80 shrink-0 snap-center rounded-3xl bg-white p-6 shadow-sm ring-1 ring-stone-100">
+                            <svg class="absolute right-5 top-4 h-10 w-10 opacity-10" style="color:#A1763C;" fill="currentColor" viewBox="0 0 24 24"><path d="M7.17 6A5.17 5.17 0 002 11.17V18h6.83v-6.83H5.5A1.67 1.67 0 017.17 9.5V6zm9 0A5.17 5.17 0 0011 11.17V18h6.83v-6.83H14.5a1.67 1.67 0 011.67-1.67V6z"/></svg>
+                            <div class="relative flex items-center gap-0.5" style="color:#A1763C;">
+                                {!! str_repeat('<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.05 2.93c.3-.92 1.6-.92 1.9 0l1.34 4.12a1 1 0 00.95.69h4.33c.97 0 1.37 1.24.59 1.81l-3.5 2.54a1 1 0 00-.36 1.12l1.33 4.12c.3.92-.75 1.69-1.54 1.12l-3.5-2.54a1 1 0 00-1.18 0l-3.5 2.54c-.79.57-1.84-.2-1.54-1.12l1.33-4.12a1 1 0 00-.36-1.12L2.16 9.55c-.78-.57-.38-1.81.59-1.81h4.33a1 1 0 00.95-.69z"/></svg>', (int) ($a->note ?? 5)) !!}
+                            </div>
+                            <blockquote class="relative mt-3 text-sm leading-relaxed text-stone-700">« {{ $a->texte }} »</blockquote>
+                            <figcaption class="relative mt-4 flex items-center gap-3">
+                                <span class="flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white" style="background:linear-gradient(135deg,#C9A45E,#7C5827);">{{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($a->nom, 0, 1)) }}</span>
+                                <div>
+                                    <p class="text-sm font-semibold text-stone-800">{{ $a->nom }}</p>
+                                    <p class="inline-flex items-center gap-1 text-[11px] text-emerald-600"><svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7 7a1 1 0 01-1.4 0l-3-3a1 1 0 111.4-1.4L9 11.6l6.3-6.3a1 1 0 011.4 0z" clip-rule="evenodd"/></svg> Cliente vérifiée</p>
+                                </div>
+                            </figcaption>
+                        </figure>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        {{-- 7. ASSISTANTE NAAQATI --}}
         <section class="mb-10 overflow-hidden rounded-3xl p-6 text-white shadow-sm" style="background:linear-gradient(135deg,#A1763C,#5F4220);">
             <div class="flex items-start gap-4">
                 <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/15">
@@ -173,22 +201,6 @@
             <p class="mt-1 mb-4 text-sm text-stone-500">Nouveautés, conseils et offres Naaqati, directement par email.</p>
             <livewire:newsletter-form />
         </section>
-
-        {{-- 8. AVIS --}}
-        @if ($avis->isNotEmpty())
-            <section class="mb-6">
-                <h2 class="mb-4 text-lg font-bold text-stone-900">Elles nous font confiance</h2>
-                <div class="-mx-4 flex gap-4 overflow-x-auto px-4 pb-2">
-                    @foreach ($avis as $a)
-                        <div class="w-72 shrink-0 rounded-2xl border border-stone-100 bg-white p-5 shadow-sm">
-                            <p class="text-sm" style="color:#A1763C;">{{ str_repeat('★', (int) ($a->note ?? 5)) }}<span class="text-stone-200">{{ str_repeat('★', 5 - (int) ($a->note ?? 5)) }}</span></p>
-                            <p class="mt-2 text-sm leading-relaxed text-stone-600">« {{ $a->texte }} »</p>
-                            <p class="mt-3 text-sm font-semibold text-stone-800">— {{ $a->nom }}</p>
-                        </div>
-                    @endforeach
-                </div>
-            </section>
-        @endif
 
     @else
         {{-- ====================== RÉSULTATS PRODUITS ====================== --}}
