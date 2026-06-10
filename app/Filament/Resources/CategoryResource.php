@@ -36,7 +36,12 @@ class CategoryResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Select::make('parent_id')
                     ->label('Catégorie parente (optionnel)')
-                    ->relationship('parent', 'nom')
+                    ->helperText('Laissez vide pour une catégorie principale. Choisissez une catégorie pour en faire une sous-catégorie.')
+                    ->options(fn (?\App\Models\Category $record) => \App\Models\Category::query()
+                        ->when($record, fn ($q) => $q->whereKeyNot($record->getKey()))
+                        ->whereNull('parent_id')
+                        ->orderBy('nom')
+                        ->pluck('nom', 'id'))
                     ->searchable()
                     ->preload(),
                 Forms\Components\TextInput::make('position')
@@ -68,7 +73,13 @@ class CategoryResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('parent.nom')
                     ->label('Catégorie parente')
-                    ->placeholder('—'),
+                    ->badge()
+                    ->placeholder('Catégorie principale'),
+                Tables\Columns\TextColumn::make('children_count')
+                    ->label('Sous-catégories')
+                    ->counts('children')
+                    ->badge()
+                    ->color('gray'),
                 Tables\Columns\TextColumn::make('position')
                     ->label('Ordre')
                     ->sortable(),
@@ -77,6 +88,9 @@ class CategoryResource extends Resource
                     ->boolean(),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('parent_id')
+                    ->label('Catégorie parente')
+                    ->relationship('parent', 'nom'),
                 Tables\Filters\TernaryFilter::make('actif')
                     ->label('Active'),
             ])
