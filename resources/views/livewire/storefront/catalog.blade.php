@@ -141,7 +141,10 @@
                                 class="group relative overflow-hidden rounded-3xl border border-[#EADFCE] p-5 text-left transition hover:-translate-y-1 hover:shadow-xl"
                                 style="background:linear-gradient(150deg,#FFFFFF 0%,#FBF7F0 60%,#F3E9D6 100%);">
                             <div class="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full" style="background:#A1763C;opacity:0.05;"></div>
-                            <div class="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm ring-1 ring-[#EADFCE]">{{ $c->emoji ?: '🌿' }}</div>
+                            @php $ic = \Illuminate\Support\Str::startsWith((string) $c->emoji, 'heroicon-') ? $c->emoji : 'heroicon-o-sparkles'; @endphp
+                            <div class="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-[#EADFCE]" style="color:#A1763C;">
+                                @svg($ic, 'h-6 w-6')
+                            </div>
                             <h3 class="relative mt-4 text-sm font-bold leading-tight text-stone-800">{{ $c->nom }}</h3>
                             <span class="relative mt-2 inline-flex items-center gap-1 text-xs font-semibold" style="color:#A1763C;">
                                 Découvrir

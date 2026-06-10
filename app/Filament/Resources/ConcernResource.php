@@ -32,10 +32,24 @@ class ConcernResource extends Resource
                 ->placeholder('Cheveux secs, Anti-chute, Peau sensible…')
                 ->required()
                 ->maxLength(255),
-            Forms\Components\TextInput::make('emoji')
-                ->label('Emoji (optionnel)')
-                ->placeholder('💧 🌿 ✨')
-                ->maxLength(16),
+            Forms\Components\Select::make('emoji')
+                ->label('Icône')
+                ->native(false)
+                ->default('heroicon-o-sparkles')
+                ->options([
+                    'heroicon-o-sparkles' => 'Éclat',
+                    'heroicon-o-beaker' => 'Soin / Formule',
+                    'heroicon-o-sun' => 'Lumière / Peau',
+                    'heroicon-o-cloud' => 'Hydratation',
+                    'heroicon-o-shield-check' => 'Protection',
+                    'heroicon-o-heart' => 'Douceur',
+                    'heroicon-o-bolt' => 'Force / Vitalité',
+                    'heroicon-o-fire' => 'Énergie',
+                    'heroicon-o-moon' => 'Apaisant',
+                    'heroicon-o-star' => 'Premium',
+                    'heroicon-o-scissors' => 'Cheveux',
+                    'heroicon-o-hand-raised' => 'Mains / Corps',
+                ]),
             Forms\Components\TextInput::make('position')
                 ->label('Ordre')
                 ->numeric()
@@ -59,7 +73,9 @@ class ConcernResource extends Resource
             ->reorderable('position')
             ->defaultSort('position')
             ->columns([
-                Tables\Columns\TextColumn::make('emoji')->label(''),
+                Tables\Columns\IconColumn::make('emoji')
+                    ->label('Icône')
+                    ->icon(fn ($state) => \Illuminate\Support\Str::startsWith((string) $state, 'heroicon-') ? $state : 'heroicon-o-sparkles'),
                 Tables\Columns\TextColumn::make('nom')->label('Besoin')->searchable(),
                 Tables\Columns\TextColumn::make('products_count')->label('Produits')->counts('products'),
                 Tables\Columns\IconColumn::make('actif')->label('Actif')->boolean(),
