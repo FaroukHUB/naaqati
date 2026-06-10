@@ -25,7 +25,7 @@ class Order extends Model
     protected $fillable = [
         'numero', 'customer_id', 'relais_id', 'statut', 'devise_code',
         'sous_total', 'packaging_id', 'frais_emballage', 'total',
-        'date_retrait', 'creneau_retrait', 'recuperateur', 'a_l_appoint', 'paie_avec', 'commentaire',
+        'date_retrait', 'creneau_retrait', 'recuperateur', 'contact_genre', 'a_l_appoint', 'paie_avec', 'commentaire',
     ];
 
     protected $attributes = [

@@ -16,19 +16,12 @@ class Checkout extends Component
     public string $nom = '';
     public string $indicatif = '213';
     public string $telephone = '';
+    public string $contactGenre = '';
     public string $email = '';
-    public string $recuperateur = '';
+    public bool $recupHomme = false;
     public bool $appoint = true;
     public string $paieAvec = '';
     public string $commentaire = '';
-
-    /** Options « qui récupère » : clé => libellé. */
-    public array $recuperateurOptions = [
-        'moi' => 'Moi-même',
-        'femme' => 'Une femme de la famille',
-        'enfant' => 'Un enfant (garçon non pubère ou fille)',
-        'homme' => 'Un homme (mari, proche)',
-    ];
 
     // Date : 'date' (une date choisie) ou 'inconnue'
     public string $dateMode = 'date';
@@ -86,22 +79,17 @@ class Checkout extends Component
         $this->creneau = $creneau;
     }
 
-    public function selectRecuperateur(string $key): void
-    {
-        $this->recuperateur = $key;
-    }
-
     public function valider(CheckoutService $checkout, PickupService $pickup, CurrentRelais $relais, CartService $cart)
     {
         $this->validate([
             'nom' => ['required', 'string', 'min:2', 'max:255'],
             'telephone' => ['required', 'string', 'min:6', 'max:30'],
+            'contactGenre' => ['required', 'in:femme,homme'],
             'email' => ['nullable', 'email', 'max:190'],
-            'recuperateur' => ['required', 'in:' . implode(',', array_keys($this->recuperateurOptions))],
             'commentaire' => ['nullable', 'string', 'max:1000'],
         ], messages: [
-            'recuperateur.required' => 'Merci d\'indiquer qui viendra récupérer.',
-            'recuperateur.in' => 'Merci d\'indiquer qui viendra récupérer.',
+            'contactGenre.required' => 'Merci d\'indiquer si ce numéro est celui d\'une femme ou d\'un homme.',
+            'contactGenre.in' => 'Merci d\'indiquer si ce numéro est celui d\'une femme ou d\'un homme.',
         ], attributes: [
             'nom' => 'nom', 'telephone' => 'téléphone',
         ]);
@@ -161,7 +149,10 @@ class Checkout extends Component
                 'email' => $this->email ?: null,
                 'date_retrait' => $dateFinale,
                 'creneau' => $creneauFinal,
-                'recuperateur' => $this->recuperateurOptions[$this->recuperateur] ?? null,
+                'recuperateur' => $this->recupHomme
+                    ? 'Homme / garçon pubère — dépôt un peu plus loin de la porte'
+                    : 'Femme ou enfant — remise à la porte',
+                'contact_genre' => $this->contactGenre,
                 'a_l_appoint' => $this->appoint,
                 'paie_avec' => $paieAvecCentimes,
                 'commentaire' => $this->commentaire ?: null,

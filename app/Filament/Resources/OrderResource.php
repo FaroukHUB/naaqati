@@ -115,6 +115,11 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('recuperateur')
                     ->label('Récupère')
                     ->placeholder('—')
+                    ->wrap()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('contact_genre')
+                    ->label('Contact')
+                    ->formatStateUsing(fn ($state) => $state === 'homme' ? '👨 Homme' : ($state === 'femme' ? '👩 Femme' : '—'))
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('monnaie')
                     ->label('Monnaie')

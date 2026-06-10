@@ -34,6 +34,19 @@
                         @endauth
                     </div>
                     <div class="sm:col-span-2">
+                        <label class="mb-1 block text-sm font-semibold text-stone-700">Ce numéro est celui de… <span style="color:#A1763C;">*</span></label>
+                        <div class="flex gap-2">
+                            @foreach (['femme' => '👩 Une femme', 'homme' => '👨 Un homme'] as $g => $lbl)
+                                <label class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border-2 p-3 text-sm font-medium @if ($contactGenre === $g) @else border-stone-200 text-stone-600 @endif"
+                                       @style(['border-color:#A1763C;background:#F6EEDF;color:#7C5827' => $contactGenre === $g])>
+                                    <input type="radio" wire:model.live="contactGenre" value="{{ $g }}" class="hidden">
+                                    {{ $lbl }}
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('contactGenre') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                    </div>
+                    <div class="sm:col-span-2">
                         <label class="mb-1 block text-sm font-semibold text-stone-700">Email <span class="font-normal text-stone-400">(optionnel)</span></label>
                         <input type="email" wire:model="email" class="w-full rounded-xl border-2 border-stone-200 bg-white px-4 py-3.5 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#A1763C]">
                         @error('email') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
@@ -98,27 +111,16 @@
 
             {{-- Qui récupère --}}
             <div class="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm">
-                <label class="mb-3 block text-sm font-bold text-stone-900">Qui viendra récupérer ? <span style="color:#A1763C;">*</span></label>
-                <div class="grid gap-2 sm:grid-cols-2">
-                    @foreach ($recuperateurOptions as $key => $libelle)
-                        @php $sel = $recuperateur === $key; @endphp
-                        <button type="button" wire:click="selectRecuperateur('{{ $key }}')"
-                                @class(['flex items-center gap-3 rounded-xl border-2 p-3 text-left transition', 'border-stone-200 hover:border-stone-300' => !$sel])
-                                @style(['border-color:#A1763C;background-color:#F6EEDF' => $sel])>
-                            <span @class(['flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2', 'border-stone-300' => !$sel])
-                                  @style(['border-color:#A1763C;background-color:#A1763C' => $sel])>
-                                @if ($sel)
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                                @endif
-                            </span>
-                            <span class="text-sm font-medium text-stone-700">{{ $libelle }}</span>
-                        </button>
-                    @endforeach
-                </div>
-                @error('recuperateur') <p class="mt-2 text-xs text-red-500">{{ $message }}</p> @enderror
-                @if ($recuperateur === 'homme')
-                    <p class="mt-3 rounded-xl bg-stone-50 p-3 text-xs text-stone-500">🌸 Pour votre confort, la commande sera déposée avec soin devant votre porte.</p>
-                @elseif ($recuperateur)
+                <h2 class="mb-1 text-base font-bold text-stone-900">Remise de la commande</h2>
+                <p class="mb-3 text-xs text-stone-400">Pour l'organisation du retrait.</p>
+                <label class="flex cursor-pointer items-start gap-3 rounded-xl border-2 p-3 @if ($recupHomme) @else border-stone-200 @endif"
+                       @style(['border-color:#A1763C;background:#F6EEDF' => $recupHomme])>
+                    <input type="checkbox" wire:model.live="recupHomme" class="mt-0.5 h-5 w-5 rounded border-stone-300 text-[#A1763C] focus:ring-0">
+                    <span class="text-sm font-medium text-stone-700">Cochez si c'est <strong>un homme ou un garçon pubère</strong> qui récupère.</span>
+                </label>
+                @if ($recupHomme)
+                    <p class="mt-3 rounded-xl bg-stone-50 p-3 text-xs text-stone-500">🌸 Votre commande sera déposée un peu plus loin de la porte d'entrée.</p>
+                @else
                     <p class="mt-3 rounded-xl bg-stone-50 p-3 text-xs text-stone-500">Remise en main propre à la porte.</p>
                 @endif
             </div>
