@@ -41,7 +41,7 @@
         </div>
     </header>
 
-    <main class="mx-auto max-w-3xl px-4 py-5 pb-28">
+    <main class="mx-auto max-w-3xl px-4 py-6 pb-28">
         {{ $slot }}
     </main>
 

@@ -24,7 +24,7 @@
         <section
             x-data="{ s: 0, n: {{ max($heroSlides->count(), 1) }} }"
             x-init="if (n > 1) setInterval(() => s = (s + 1) % n, 5000)"
-            class="relative mb-8 overflow-hidden rounded-3xl shadow-sm"
+            class="relative mb-10 overflow-hidden rounded-3xl shadow-sm"
         >
             @if ($heroSlides->isEmpty())
                 <div class="flex min-h-[230px] flex-col justify-center px-7 py-10 text-white" style="background:linear-gradient(135deg,#C9A45E 0%,#A1763C 45%,#7C5827 100%);">
@@ -59,14 +59,14 @@
         </section>
 
         {{-- Recherche --}}
-        <div class="mb-8">
+        <div class="mb-10">
             <input type="search" wire:model.live.debounce.400ms="search" placeholder="Rechercher un produit…"
                    class="w-full rounded-2xl border-2 border-stone-200 bg-white px-4 py-3 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#A1763C]">
         </div>
 
         {{-- 2. NOTRE SÉLECTION DU MOMENT --}}
         @if ($enAvant->isNotEmpty())
-            <section class="mb-10">
+            <section class="mb-12">
                 <div class="mb-4 flex items-end justify-between">
                     <div>
                         <span class="text-xs font-semibold uppercase tracking-[0.2em]" style="color:#A1763C;">Coup de cœur</span>
@@ -89,7 +89,7 @@
         @endif
 
         {{-- 3. COMMENT ÇA MARCHE --}}
-        <section class="mb-10 rounded-3xl bg-[#FBF7F0] p-6">
+        <section class="mb-12 rounded-3xl bg-[#FBF7F0] p-6">
             <h2 class="mb-5 text-center text-lg font-bold text-stone-900">Comment ça marche ?</h2>
             <div class="grid grid-cols-3 gap-3 text-center">
                 @foreach ([['🛍️','Choisissez','Parcourez nos produits naturels et ajoutez-les au panier.'],['📅','Réservez','Indiquez quand vous passez récupérer à Riadi City.'],['🔔','On vous prévient','Un message WhatsApp dès que votre commande est prête.']] as $etape)
@@ -104,7 +104,7 @@
 
         {{-- 4. CATÉGORIES --}}
         @if ($categories->isNotEmpty())
-            <section class="mb-10">
+            <section class="mb-12">
                 <h2 class="mb-4 text-lg font-bold text-stone-900">Nos catégories</h2>
                 <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
                     @foreach ($categories as $i => $cat)
@@ -135,14 +135,14 @@
                     <h2 class="mt-1 text-xl font-extrabold text-stone-900">Trouvez selon votre besoin</h2>
                     <p class="mt-1 text-sm text-stone-500">Choisissez ce qui vous correspond, on vous montre les produits adaptés.</p>
                 </div>
-                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                     @foreach ($concerns as $c)
                         <button wire:click="ouvrirBesoin('{{ $c->slug }}')"
-                                class="group relative overflow-hidden rounded-3xl border border-[#EADFCE] p-4 text-left transition hover:-translate-y-1 hover:shadow-xl"
+                                class="group relative overflow-hidden rounded-3xl border border-[#EADFCE] p-5 text-left transition hover:-translate-y-1 hover:shadow-xl"
                                 style="background:linear-gradient(150deg,#FFFFFF 0%,#FBF7F0 60%,#F3E9D6 100%);">
-                            <div class="absolute -right-6 -top-6 h-20 w-20 rounded-full opacity-[0.07] transition-transform duration-500 group-hover:scale-150" style="background:#A1763C;"></div>
+                            <div class="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full" style="background:#A1763C;opacity:0.05;"></div>
                             <div class="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm ring-1 ring-[#EADFCE]">{{ $c->emoji ?: '🌿' }}</div>
-                            <h3 class="relative mt-3 text-sm font-bold leading-tight text-stone-800">{{ $c->nom }}</h3>
+                            <h3 class="relative mt-4 text-sm font-bold leading-tight text-stone-800">{{ $c->nom }}</h3>
                             <span class="relative mt-2 inline-flex items-center gap-1 text-xs font-semibold" style="color:#A1763C;">
                                 Découvrir
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 transition group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
@@ -158,7 +158,7 @@
             <section class="mb-12 overflow-hidden rounded-3xl border border-[#EADFCE] p-6 sm:p-8" style="background:radial-gradient(120% 120% at 0% 0%, #FBF7F0 0%, #FFFFFF 55%);">
                 <div class="mb-6 text-center">
                     <span class="text-xs font-semibold uppercase tracking-[0.2em]" style="color:#A1763C;">Avis clientes</span>
-                    <h2 class="mt-1 text-xl font-extrabold text-stone-900">Elles adorent Naaqati</h2>
+                    <h2 class="mt-1 text-xl font-extrabold text-stone-900">Elles valident Naaqati</h2>
                 </div>
                 <div class="-mx-2 flex snap-x snap-mandatory gap-4 overflow-x-auto px-2 pb-2">
                     @foreach ($avis as $a)
@@ -182,7 +182,7 @@
         @endif
 
         {{-- 7. ASSISTANTE NAAQATI --}}
-        <section class="mb-10 overflow-hidden rounded-3xl p-6 text-white shadow-sm" style="background:linear-gradient(135deg,#A1763C,#5F4220);">
+        <section class="mb-12 overflow-hidden rounded-3xl p-6 text-white shadow-sm" style="background:linear-gradient(135deg,#A1763C,#5F4220);">
             <div class="flex items-start gap-4">
                 <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/15">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10.5h8M8 14h5m-9 6l3.5-2H17a3 3 0 003-3V7a3 3 0 00-3-3H7a3 3 0 00-3 3v13z"/></svg>
@@ -196,7 +196,7 @@
         </section>
 
         {{-- 7. NEWSLETTER --}}
-        <section class="mb-10 rounded-3xl border-2 border-[#E8D9BF] bg-[#FBF7F0] p-6 text-center">
+        <section class="mb-12 rounded-3xl border-2 border-[#E8D9BF] bg-[#FBF7F0] p-6 text-center">
             <h2 class="text-lg font-bold text-stone-900">Restez informée 🌿</h2>
             <p class="mt-1 mb-4 text-sm text-stone-500">Nouveautés, conseils et offres Naaqati, directement par email.</p>
             <livewire:newsletter-form />
