@@ -36,13 +36,21 @@ class CheckoutService
         $quantites = $this->cart->quantitesParProduit();
 
         return DB::transaction(function () use ($infos, $packages, $relaisId, $sousTotal, $fraisTotal, $quantites) {
-            // 1. Cliente.
-            $customer = Customer::firstOrCreate(
-                ['telephone' => $infos['telephone']],
-                ['nom' => $infos['nom'], 'email' => $infos['email'] ?? null],
-            );
+            // 1. Cliente (compte connecté si fourni, sinon par téléphone).
+            $customer = ! empty($infos['customer_id'])
+                ? Customer::find($infos['customer_id'])
+                : null;
+
+            if (! $customer) {
+                $customer = Customer::firstOrCreate(
+                    ['telephone' => $infos['telephone']],
+                    ['nom' => $infos['nom'], 'email' => $infos['email'] ?? null],
+                );
+            }
+
             $customer->fill([
                 'nom' => $infos['nom'],
+                'telephone' => $infos['telephone'],
                 'email' => $infos['email'] ?? $customer->email,
             ])->save();
 

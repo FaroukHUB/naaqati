@@ -15,23 +15,17 @@
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-semibold text-stone-700">Téléphone / WhatsApp <span style="color:#A1763C;">*</span></label>
-                        @auth('customer')
-                            <input type="tel" value="+{{ auth('customer')->user()->telephone }}" disabled
-                                   class="w-full rounded-xl border-2 border-stone-200 bg-stone-50 px-4 py-3.5 text-base text-stone-500 outline-none">
-                            <p class="mt-1 text-xs text-stone-400">Numéro de votre compte.</p>
-                        @else
-                            <div class="flex gap-2">
-                                <select wire:model="indicatif" class="w-28 shrink-0 rounded-xl border-2 border-stone-200 bg-white px-2 py-3.5 text-base text-stone-900 outline-none focus:border-[#A1763C]">
-                                    @foreach (\App\Support\Phone::INDICATIFS as $code => $lbl)
-                                        <option value="{{ $code }}">{{ $lbl }}</option>
-                                    @endforeach
-                                </select>
-                                <input type="tel" wire:model="telephone" placeholder="555 12 34 56"
-                                       class="flex-1 rounded-xl border-2 border-stone-200 bg-white px-4 py-3.5 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#A1763C]">
-                            </div>
-                            <p class="mt-1 text-xs text-stone-400">C'est sur ce numéro que vous recevrez la notification WhatsApp.</p>
-                            @error('telephone') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
-                        @endauth
+                        <div class="flex gap-2">
+                            <select wire:model="indicatif" class="w-28 shrink-0 rounded-xl border-2 border-stone-200 bg-white px-2 py-3.5 text-base text-stone-900 outline-none focus:border-[#A1763C]">
+                                @foreach (\App\Support\Phone::INDICATIFS as $code => $lbl)
+                                    <option value="{{ $code }}">{{ $lbl }}</option>
+                                @endforeach
+                            </select>
+                            <input type="tel" wire:model="telephone" placeholder="555 12 34 56"
+                                   class="flex-1 rounded-xl border-2 border-stone-200 bg-white px-4 py-3.5 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#A1763C]">
+                        </div>
+                        <p class="mt-1 text-xs text-stone-400">C'est sur ce numéro que vous recevrez la notification WhatsApp.</p>
+                        @error('telephone') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
                     </div>
                     <div class="sm:col-span-2">
                         <label class="mb-1 block text-sm font-semibold text-stone-700">Ce numéro est celui de… <span style="color:#A1763C;">*</span></label>

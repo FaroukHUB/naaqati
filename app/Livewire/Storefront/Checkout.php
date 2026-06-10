@@ -46,9 +46,25 @@ class Checkout extends Component
 
         if ($c = auth('customer')->user()) {
             $this->nom = $c->nom;
-            $this->telephone = $c->telephone;
             $this->email = (string) $c->email;
+            [$this->indicatif, $this->telephone] = $this->splitPhone($c->telephone);
         }
+    }
+
+    /** Découpe un numéro stocké en [indicatif, numéro local]. */
+    private function splitPhone(?string $full): array
+    {
+        $digits = preg_replace('/\D+/', '', (string) $full);
+        $codes = array_keys(Phone::INDICATIFS);
+        usort($codes, fn ($a, $b) => strlen($b) <=> strlen($a));
+
+        foreach ($codes as $code) {
+            if (str_starts_with($digits, $code) && strlen($digits) > strlen($code) + 5) {
+                return [$code, substr($digits, strlen($code))];
+            }
+        }
+
+        return ['213', ltrim($digits, '0')];
     }
 
     public function setDateMode(string $mode): void
@@ -138,14 +154,13 @@ class Checkout extends Component
             }
         }
 
-        $telephone = auth('customer')->check()
-            ? auth('customer')->user()->telephone
-            : Phone::international($this->indicatif, $this->telephone);
+        $telephone = Phone::international($this->indicatif, $this->telephone);
 
         try {
             $order = $checkout->passerCommande([
                 'nom' => $this->nom,
                 'telephone' => $telephone,
+                'customer_id' => auth('customer')->id(),
                 'email' => $this->email ?: null,
                 'date_retrait' => $dateFinale,
                 'creneau' => $creneauFinal,
