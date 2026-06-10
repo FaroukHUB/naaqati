@@ -41,14 +41,24 @@
         </div>
     </header>
 
-    <main class="mx-auto max-w-3xl px-4 py-6 pb-28">
+    <main class="mx-auto max-w-3xl px-4 py-6">
         {{ $slot }}
     </main>
 
-    <footer class="mt-12 border-t border-[#EADFCE] bg-[#FBF7F0] py-8 text-center text-xs text-stone-400">
-        <p class="font-semibold tracking-[0.2em] text-[#A1763C]">NAAQATI</p>
-        <p class="mt-1">Produits du Sahara · Point relais Riadi City</p>
+    <footer class="mt-10 border-t border-[#EADFCE] bg-[#FBF7F0] px-4 pt-8 pb-28 text-center text-xs text-stone-400">
+        @if (file_exists(public_path('images/logo.png')))
+            <img src="{{ asset('images/logo.png') }}" alt="Naaqati" class="mx-auto mb-3 h-10 w-auto">
+        @else
+            <p class="text-base font-extrabold tracking-[0.25em] text-[#A1763C]">NAAQATI</p>
+        @endif
+        <div class="mb-3 mt-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 font-medium text-stone-500">
+            <a href="{{ route('shop.catalog') }}" wire:navigate class="hover:text-[#A1763C]">Boutique</a>
+            <a href="{{ route('shop.assistante') }}" class="hover:text-[#A1763C]">Assistante</a>
+            <a href="{{ route('shop.account') }}" class="hover:text-[#A1763C]">Mon compte</a>
+        </div>
+        <p>Produits du Sahara · Point relais Riadi City</p>
         <p class="mt-1">Retrait sur place · Paiement à la récupération</p>
+        <p class="mt-3 text-[10px] text-stone-300">© {{ date('Y') }} Naaqati</p>
     </footer>
 
     @php
