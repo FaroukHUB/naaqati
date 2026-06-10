@@ -92,14 +92,26 @@
         @endif
 
         {{-- 3. COMMENT ÇA MARCHE --}}
-        <section class="mb-12 rounded-3xl bg-[#FBF7F0] p-6">
-            <h2 class="mb-5 text-center text-lg font-bold text-stone-900">Comment ça marche ?</h2>
-            <div class="grid grid-cols-3 gap-3 text-center">
-                @foreach ([['🛍️','Choisissez','Parcourez nos produits naturels et ajoutez-les au panier.'],['📅','Réservez','Indiquez quand vous passez récupérer à Riadi City.'],['🔔','On vous prévient','Un message WhatsApp dès que votre commande est prête.']] as $etape)
-                    <div>
-                        <div class="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-white text-2xl shadow-sm">{{ $etape[0] }}</div>
-                        <h3 class="text-sm font-semibold text-stone-800">{{ $etape[1] }}</h3>
-                        <p class="mt-1 text-xs text-stone-500">{{ $etape[2] }}</p>
+        <section class="mb-12">
+            <div class="mb-6 text-center">
+                <span class="text-xs font-semibold uppercase tracking-[0.2em]" style="color:#A1763C;">Simple &amp; rapide</span>
+                <h2 class="mt-1 text-xl font-extrabold text-stone-900">Comment ça marche ?</h2>
+            </div>
+            <div class="space-y-4 sm:grid sm:grid-cols-3 sm:gap-5 sm:space-y-0">
+                @foreach ([
+                    ['heroicon-o-shopping-bag', 'Choisissez', 'Parcourez nos produits naturels et ajoutez-les au panier.'],
+                    ['heroicon-o-calendar-days', 'Réservez', 'Indiquez quand vous passez récupérer à Riadi City.'],
+                    ['heroicon-o-bell-alert', 'On vous prévient', 'Un message WhatsApp dès que votre commande est prête.'],
+                ] as $i => $etape)
+                    <div class="relative flex items-center gap-5 rounded-3xl border border-[#EADFCE] bg-white p-5 shadow-sm transition hover:shadow-md sm:flex-col sm:items-center sm:gap-3 sm:p-7 sm:text-center">
+                        <div class="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-white shadow-md" style="background:linear-gradient(135deg,#C9A45E,#7C5827);">
+                            @svg($etape[0], 'h-8 w-8')
+                            <span class="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-extrabold shadow ring-1 ring-[#EADFCE]" style="color:#A1763C;">{{ $i + 1 }}</span>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-stone-900 sm:mt-1">{{ $etape[1] }}</h3>
+                            <p class="mt-1 text-sm leading-relaxed text-stone-500">{{ $etape[2] }}</p>
+                        </div>
                     </div>
                 @endforeach
             </div>
