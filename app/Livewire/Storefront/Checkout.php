@@ -18,6 +18,14 @@ class Checkout extends Component
     public string $recuperateur = '';
     public string $commentaire = '';
 
+    /** Options « qui récupère » : clé => libellé. */
+    public array $recuperateurOptions = [
+        'moi' => 'Moi-même',
+        'femme' => 'Une femme de la famille',
+        'enfant' => 'Un enfant (garçon non pubère ou fille)',
+        'homme' => 'Un homme (mari, proche)',
+    ];
+
     // Date : 'date' (une date choisie) ou 'inconnue'
     public string $dateMode = 'date';
     public string $date_retrait = '';
@@ -74,13 +82,18 @@ class Checkout extends Component
         $this->creneau = $creneau;
     }
 
+    public function selectRecuperateur(string $key): void
+    {
+        $this->recuperateur = $key;
+    }
+
     public function valider(CheckoutService $checkout, PickupService $pickup, CurrentRelais $relais)
     {
         $this->validate([
             'nom' => ['required', 'string', 'min:2', 'max:255'],
             'telephone' => ['required', 'string', 'min:6', 'max:30'],
             'email' => ['nullable', 'email', 'max:190'],
-            'recuperateur' => ['nullable', 'string', 'max:255'],
+            'recuperateur' => ['nullable', 'in:' . implode(',', array_keys($this->recuperateurOptions))],
             'commentaire' => ['nullable', 'string', 'max:1000'],
         ], attributes: [
             'nom' => 'nom', 'telephone' => 'téléphone',
@@ -121,7 +134,7 @@ class Checkout extends Component
                 'email' => $this->email ?: null,
                 'date_retrait' => $dateFinale,
                 'creneau' => $creneauFinal,
-                'recuperateur' => $this->recuperateur ?: null,
+                'recuperateur' => $this->recuperateurOptions[$this->recuperateur] ?? null,
                 'commentaire' => $this->commentaire ?: null,
             ]);
         } catch (\Throwable $e) {

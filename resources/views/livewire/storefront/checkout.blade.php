@@ -84,10 +84,28 @@
 
             {{-- Qui récupère --}}
             <div class="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm">
-                <label class="mb-1 block text-sm font-bold text-stone-900">Qui viendra récupérer ? <span class="font-normal text-stone-400">(optionnel)</span></label>
-                <input type="text" wire:model="recuperateur" placeholder="Vous-même, votre fille, un proche…"
-                       class="w-full rounded-xl border-2 border-stone-200 bg-white px-4 py-3.5 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#B76E79]">
-                <p class="mt-2 text-xs text-stone-400">Pour votre confort, si une autre personne récupère, la commande pourra être déposée avec soin devant votre porte.</p>
+                <label class="mb-3 block text-sm font-bold text-stone-900">Qui viendra récupérer ? <span class="font-normal text-stone-400">(optionnel)</span></label>
+                <div class="grid gap-2 sm:grid-cols-2">
+                    @foreach ($recuperateurOptions as $key => $libelle)
+                        @php $sel = $recuperateur === $key; @endphp
+                        <button type="button" wire:click="selectRecuperateur('{{ $key }}')"
+                                @class(['flex items-center gap-3 rounded-xl border-2 p-3 text-left transition', 'border-stone-200 hover:border-stone-300' => !$sel])
+                                @style(['border-color:#B76E79;background-color:#FBF1F3' => $sel])>
+                            <span @class(['flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2', 'border-stone-300' => !$sel])
+                                  @style(['border-color:#B76E79;background-color:#B76E79' => $sel])>
+                                @if ($sel)
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                @endif
+                            </span>
+                            <span class="text-sm font-medium text-stone-700">{{ $libelle }}</span>
+                        </button>
+                    @endforeach
+                </div>
+                @if ($recuperateur === 'homme')
+                    <p class="mt-3 rounded-xl bg-stone-50 p-3 text-xs text-stone-500">🌸 Pour votre confort, la commande sera déposée avec soin devant votre porte.</p>
+                @elseif ($recuperateur)
+                    <p class="mt-3 rounded-xl bg-stone-50 p-3 text-xs text-stone-500">Remise en main propre à la porte.</p>
+                @endif
             </div>
 
             {{-- Commentaire --}}
