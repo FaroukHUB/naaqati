@@ -6,6 +6,7 @@ use App\Services\CartService;
 use App\Services\CheckoutService;
 use App\Services\PickupService;
 use App\Support\CurrentRelais;
+use App\Support\Phone;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -13,6 +14,7 @@ use Livewire\Component;
 class Checkout extends Component
 {
     public string $nom = '';
+    public string $indicatif = '213';
     public string $telephone = '';
     public string $email = '';
     public string $recuperateur = '';
@@ -130,10 +132,14 @@ class Checkout extends Component
         }
         // dateMode 'inconnue' => date et créneau null
 
+        $telephone = auth('customer')->check()
+            ? auth('customer')->user()->telephone
+            : Phone::international($this->indicatif, $this->telephone);
+
         try {
             $order = $checkout->passerCommande([
                 'nom' => $this->nom,
-                'telephone' => $this->telephone,
+                'telephone' => $telephone,
                 'email' => $this->email ?: null,
                 'date_retrait' => $dateFinale,
                 'creneau' => $creneauFinal,

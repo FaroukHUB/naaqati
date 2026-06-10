@@ -15,6 +15,7 @@ class PackagesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('items'))
             ->columns([
                 Tables\Columns\TextColumn::make('position')
                     ->label('Paquet')
@@ -23,6 +24,10 @@ class PackagesRelationManager extends RelationManager
                     ->label('Emballage')
                     ->badge()
                     ->placeholder('Sachet kraft'),
+                Tables\Columns\TextColumn::make('contenu')
+                    ->label('Contenu')
+                    ->getStateUsing(fn ($record) => $record->items->map(fn ($i) => $i->quantite . '× ' . $i->nom_snapshot)->implode(', '))
+                    ->wrap(),
                 Tables\Columns\TextColumn::make('nom_destinataire')
                     ->label('Pour')
                     ->placeholder('—'),

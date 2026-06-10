@@ -4,6 +4,7 @@ namespace App\Livewire\Auth;
 
 use App\Models\Customer;
 use App\Models\NewsletterSubscription;
+use App\Support\Phone;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
@@ -13,6 +14,7 @@ use Livewire\Component;
 class Register extends Component
 {
     public string $nom = '';
+    public string $indicatif = '213';
     public string $telephone = '';
     public string $email = '';
     public string $password = '';
@@ -21,8 +23,9 @@ class Register extends Component
 
     public function inscrire()
     {
-        $data = $this->validate([
+        $this->validate([
             'nom' => ['required', 'string', 'min:2', 'max:255'],
+            'indicatif' => ['required', 'in:' . implode(',', array_keys(Phone::INDICATIFS))],
             'telephone' => ['required', 'string', 'min:6', 'max:30'],
             'email' => ['nullable', 'email', 'max:190'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
@@ -30,7 +33,9 @@ class Register extends Component
             'nom' => 'nom', 'telephone' => 'téléphone', 'password' => 'mot de passe',
         ]);
 
-        $customer = Customer::where('telephone', $this->telephone)->first();
+        $telephone = Phone::international($this->indicatif, $this->telephone);
+
+        $customer = Customer::where('telephone', $telephone)->first();
 
         if ($customer && $customer->password) {
             $this->addError('telephone', 'Un compte existe déjà avec ce numéro. Connectez-vous.');
@@ -48,7 +53,7 @@ class Register extends Component
         } else {
             $customer = Customer::create([
                 'nom' => $this->nom,
-                'telephone' => $this->telephone,
+                'telephone' => $telephone,
                 'email' => $this->email ?: null,
                 'password' => Hash::make($this->password),
                 'newsletter' => $this->newsletter,

@@ -12,7 +12,14 @@
             </div>
             <div>
                 <label class="mb-1 block text-sm font-semibold text-stone-700">Téléphone / WhatsApp <span style="color:#B76E79;">*</span></label>
-                <input type="tel" wire:model="telephone" placeholder="0555 12 34 56" class="{{ $cls }}">
+                <div class="flex gap-2">
+                    <select wire:model="indicatif" class="w-28 shrink-0 rounded-xl border-2 border-stone-200 bg-white px-2 py-3.5 text-base text-stone-900 outline-none focus:border-[#B76E79]">
+                        @foreach (\App\Support\Phone::INDICATIFS as $code => $lbl)
+                            <option value="{{ $code }}">{{ $lbl }}</option>
+                        @endforeach
+                    </select>
+                    <input type="tel" wire:model="telephone" placeholder="555 12 34 56" class="{{ $cls }} flex-1">
+                </div>
                 @error('telephone') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
             </div>
             <div>

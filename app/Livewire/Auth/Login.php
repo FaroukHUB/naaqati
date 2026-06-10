@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Support\Phone;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -9,6 +10,7 @@ use Livewire\Component;
 #[Layout('components.shop-layout')]
 class Login extends Component
 {
+    public string $indicatif = '213';
     public string $telephone = '';
     public string $password = '';
     public bool $remember = true;
@@ -23,7 +25,7 @@ class Login extends Component
         ]);
 
         $ok = Auth::guard('customer')->attempt([
-            'telephone' => $this->telephone,
+            'telephone' => Phone::international($this->indicatif, $this->telephone),
             'password' => $this->password,
         ], $this->remember);
 
