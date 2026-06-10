@@ -84,7 +84,7 @@
 
             {{-- Qui récupère --}}
             <div class="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm">
-                <label class="mb-3 block text-sm font-bold text-stone-900">Qui viendra récupérer ? <span class="font-normal text-stone-400">(optionnel)</span></label>
+                <label class="mb-3 block text-sm font-bold text-stone-900">Qui viendra récupérer ? <span style="color:#B76E79;">*</span></label>
                 <div class="grid gap-2 sm:grid-cols-2">
                     @foreach ($recuperateurOptions as $key => $libelle)
                         @php $sel = $recuperateur === $key; @endphp
@@ -101,6 +101,7 @@
                         </button>
                     @endforeach
                 </div>
+                @error('recuperateur') <p class="mt-2 text-xs text-red-500">{{ $message }}</p> @enderror
                 @if ($recuperateur === 'homme')
                     <p class="mt-3 rounded-xl bg-stone-50 p-3 text-xs text-stone-500">🌸 Pour votre confort, la commande sera déposée avec soin devant votre porte.</p>
                 @elseif ($recuperateur)

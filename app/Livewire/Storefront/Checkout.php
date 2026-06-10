@@ -93,8 +93,11 @@ class Checkout extends Component
             'nom' => ['required', 'string', 'min:2', 'max:255'],
             'telephone' => ['required', 'string', 'min:6', 'max:30'],
             'email' => ['nullable', 'email', 'max:190'],
-            'recuperateur' => ['nullable', 'in:' . implode(',', array_keys($this->recuperateurOptions))],
+            'recuperateur' => ['required', 'in:' . implode(',', array_keys($this->recuperateurOptions))],
             'commentaire' => ['nullable', 'string', 'max:1000'],
+        ], messages: [
+            'recuperateur.required' => 'Merci d\'indiquer qui viendra récupérer.',
+            'recuperateur.in' => 'Merci d\'indiquer qui viendra récupérer.',
         ], attributes: [
             'nom' => 'nom', 'telephone' => 'téléphone',
         ]);
