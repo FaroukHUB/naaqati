@@ -25,7 +25,7 @@ class Order extends Model
     protected $fillable = [
         'numero', 'customer_id', 'relais_id', 'statut', 'devise_code',
         'sous_total', 'packaging_id', 'frais_emballage', 'total',
-        'date_retrait', 'creneau_retrait', 'recuperateur', 'commentaire',
+        'date_retrait', 'creneau_retrait', 'recuperateur', 'a_l_appoint', 'paie_avec', 'commentaire',
     ];
 
     protected $attributes = [
@@ -38,7 +38,19 @@ class Order extends Model
         'sous_total' => 'integer',
         'frais_emballage' => 'integer',
         'total' => 'integer',
+        'a_l_appoint' => 'boolean',
+        'paie_avec' => 'integer',
     ];
+
+    /** Monnaie à rendre (centimes), si la cliente n'a pas l'appoint. */
+    public function monnaieARendre(): int
+    {
+        if ($this->a_l_appoint || ! $this->paie_avec) {
+            return 0;
+        }
+
+        return max(0, $this->paie_avec - $this->total);
+    }
 
     public function customer(): BelongsTo
     {

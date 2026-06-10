@@ -58,6 +58,8 @@ class CheckoutService
                 'date_retrait' => $infos['date_retrait'] ?? null,
                 'creneau_retrait' => $infos['creneau'] ?? null,
                 'recuperateur' => $infos['recuperateur'] ?? null,
+                'a_l_appoint' => $infos['a_l_appoint'] ?? true,
+                'paie_avec' => $infos['paie_avec'] ?? null,
                 'commentaire' => $infos['commentaire'] ?? null,
             ]);
 

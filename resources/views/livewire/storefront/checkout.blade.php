@@ -123,6 +123,39 @@
                 @endif
             </div>
 
+            {{-- Paiement / appoint --}}
+            <div class="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm">
+                <h2 class="mb-1 text-base font-bold text-stone-900">Paiement sur place (espèces)</h2>
+                <p class="mb-3 text-xs text-stone-400">Pour qu'on vous prépare la monnaie le jour du retrait.</p>
+                <div class="space-y-2">
+                    <label class="flex cursor-pointer items-center gap-3 rounded-xl border-2 p-3 @if ($appoint) @else border-stone-200 @endif" @style(['border-color:#A1763C;background:#F6EEDF' => $appoint])>
+                        <input type="radio" wire:model.live="appoint" value="1" class="text-[#A1763C] focus:ring-0">
+                        <span class="text-sm font-medium text-stone-700">J'aurai l'appoint <span class="text-stone-400">({{ number_format($total / 100, 0, ',', ' ') }} DA)</span></span>
+                    </label>
+                    <label class="flex cursor-pointer items-center gap-3 rounded-xl border-2 p-3 @if (! $appoint) @else border-stone-200 @endif" @style(['border-color:#A1763C;background:#F6EEDF' => ! $appoint])>
+                        <input type="radio" wire:model.live="appoint" value="0" class="text-[#A1763C] focus:ring-0">
+                        <span class="text-sm font-medium text-stone-700">Je n'aurai pas l'appoint</span>
+                    </label>
+                </div>
+                @if (! $appoint)
+                    <div class="mt-3" x-data="{ paie: @entangle('paieAvec'), total: {{ $total / 100 }} }">
+                        <label class="mb-1 block text-sm font-semibold text-stone-700">Je paierai avec…</label>
+                        <div class="flex items-center gap-2">
+                            <input type="number" min="0" x-model="paie" placeholder="ex : 2000"
+                                   class="w-40 rounded-xl border-2 border-stone-200 bg-white px-4 py-2.5 text-base text-stone-900 outline-none focus:border-[#A1763C]">
+                            <span class="text-sm text-stone-500">DA</span>
+                        </div>
+                        <template x-if="paie && Number(paie) >= total">
+                            <p class="mt-2 text-sm" style="color:#A1763C;">Monnaie à prévoir : <strong x-text="(Number(paie) - total).toLocaleString('fr-FR')"></strong> DA</p>
+                        </template>
+                        <template x-if="paie && Number(paie) < total">
+                            <p class="mt-2 text-sm text-red-500">Le montant doit être ≥ {{ number_format($total / 100, 0, ',', ' ') }} DA.</p>
+                        </template>
+                        @error('paieAvec') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+                    </div>
+                @endif
+            </div>
+
             {{-- Commentaire --}}
             <div class="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm">
                 <label class="mb-1 block text-sm font-bold text-stone-900">Commentaire <span class="font-normal text-stone-400">(optionnel)</span></label>

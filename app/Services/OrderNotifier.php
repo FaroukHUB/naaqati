@@ -49,7 +49,11 @@ class OrderNotifier
             $retrait .= ' · ' . str_replace('_', ' ', $order->creneau_retrait);
         }
 
-        return "{$order->customer?->nom} — {$total}\nRetrait : {$retrait}\nRécupère : " . ($order->recuperateur ?? '—');
+        $paiement = $order->a_l_appoint
+            ? 'Appoint'
+            : 'Rendre ' . number_format($order->monnaieARendre() / 100, 0, ',', ' ') . ' DA (paie ' . number_format(($order->paie_avec ?? 0) / 100, 0, ',', ' ') . ' DA)';
+
+        return "{$order->customer?->nom} — {$total}\nRetrait : {$retrait}\nRécupère : " . ($order->recuperateur ?? '—') . "\nMonnaie : {$paiement}";
     }
 
     private function filamentBell(Order $order): void

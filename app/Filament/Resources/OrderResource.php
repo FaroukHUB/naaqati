@@ -116,6 +116,13 @@ class OrderResource extends Resource
                     ->label('Récupère')
                     ->placeholder('—')
                     ->toggleable(),
+                Tables\Columns\TextColumn::make('monnaie')
+                    ->label('Monnaie')
+                    ->badge()
+                    ->color(fn (Order $record) => $record->a_l_appoint ? 'success' : 'warning')
+                    ->getStateUsing(fn (Order $record) => $record->a_l_appoint
+                        ? 'Appoint ✓'
+                        : 'Rendre ' . number_format($record->monnaieARendre() / 100, 0, ',', ' ') . ' DA (paie ' . number_format(($record->paie_avec ?? 0) / 100, 0, ',', ' ') . ')'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Commandé le')
                     ->dateTime('d/m/Y H:i')

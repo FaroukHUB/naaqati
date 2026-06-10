@@ -16,6 +16,9 @@
                 <div class="flex justify-between"><span class="text-stone-500">Retrait</span><span class="font-semibold text-stone-800">{{ $retrait }}</span></div>
                 <div class="flex justify-between"><span class="text-stone-500">Point relais</span><span class="font-semibold text-stone-800">{{ $order->relais->nom }}</span></div>
                 <div class="flex justify-between border-t border-stone-200 pt-3 text-base"><span class="font-bold text-stone-900">Total</span><span class="font-bold" style="color:#A1763C;">{{ number_format($order->total / 100, 0, ',', ' ') }} DA</span></div>
+                @if (! $order->a_l_appoint && $order->paie_avec)
+                    <div class="flex justify-between text-xs text-stone-500"><span>Vous paierez avec {{ number_format($order->paie_avec / 100, 0, ',', ' ') }} DA</span><span>monnaie prévue : {{ number_format($order->monnaieARendre() / 100, 0, ',', ' ') }} DA</span></div>
+                @endif
             </div>
 
             {{-- Détail des paquets --}}

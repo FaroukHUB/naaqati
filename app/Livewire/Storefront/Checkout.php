@@ -18,6 +18,8 @@ class Checkout extends Component
     public string $telephone = '';
     public string $email = '';
     public string $recuperateur = '';
+    public bool $appoint = true;
+    public string $paieAvec = '';
     public string $commentaire = '';
 
     /** Options « qui récupère » : clé => libellé. */
@@ -89,7 +91,7 @@ class Checkout extends Component
         $this->recuperateur = $key;
     }
 
-    public function valider(CheckoutService $checkout, PickupService $pickup, CurrentRelais $relais)
+    public function valider(CheckoutService $checkout, PickupService $pickup, CurrentRelais $relais, CartService $cart)
     {
         $this->validate([
             'nom' => ['required', 'string', 'min:2', 'max:255'],
@@ -132,6 +134,22 @@ class Checkout extends Component
         }
         // dateMode 'inconnue' => date et créneau null
 
+        // Paiement : appoint ou montant avec lequel la cliente paiera.
+        $paieAvecCentimes = null;
+        if (! $this->appoint) {
+            $total = $cart->total();
+            $montant = (float) str_replace(',', '.', $this->paieAvec);
+            if ($montant <= 0) {
+                $this->addError('paieAvec', 'Indiquez le montant avec lequel vous paierez.');
+                return;
+            }
+            $paieAvecCentimes = (int) round($montant * 100);
+            if ($paieAvecCentimes < $total) {
+                $this->addError('paieAvec', 'Le montant doit être au moins égal au total (' . number_format($total / 100, 0, ',', ' ') . ' DA).');
+                return;
+            }
+        }
+
         $telephone = auth('customer')->check()
             ? auth('customer')->user()->telephone
             : Phone::international($this->indicatif, $this->telephone);
@@ -144,6 +162,8 @@ class Checkout extends Component
                 'date_retrait' => $dateFinale,
                 'creneau' => $creneauFinal,
                 'recuperateur' => $this->recuperateurOptions[$this->recuperateur] ?? null,
+                'a_l_appoint' => $this->appoint,
+                'paie_avec' => $paieAvecCentimes,
                 'commentaire' => $this->commentaire ?: null,
             ]);
         } catch (\Throwable $e) {
