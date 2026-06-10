@@ -89,13 +89,17 @@ class Catalog extends Component
                 ->orderBy('position')
                 ->get();
 
-            $enAvant = Product::query()
+            // "Notre sélection du moment" : produits choisis en admin (en_avant).
+            // À défaut de sélection, on retombe sur les plus récents.
+            $base = Product::query()
                 ->where('actif', true)
                 ->whereHas('inventories', $dispoSurRelais)
-                ->with(['inventories' => fn ($q) => $q->where('relais_id', $relaisId), 'media', 'category'])
-                ->latest()
-                ->take(8)
-                ->get();
+                ->with(['inventories' => fn ($q) => $q->where('relais_id', $relaisId), 'media', 'category']);
+
+            $enAvant = (clone $base)->where('en_avant', true)->orderBy('nom')->take(12)->get();
+            if ($enAvant->isEmpty()) {
+                $enAvant = $base->latest()->take(8)->get();
+            }
 
             $concerns = Concern::where('actif', true)
                 ->whereHas('products', fn ($q) => $q->where('actif', true)->whereHas('inventories', $dispoSurRelais))

@@ -69,6 +69,9 @@ class ProductResource extends Resource
                 Forms\Components\Toggle::make('actif')
                     ->label('Produit actif')
                     ->default(true),
+                Forms\Components\Toggle::make('en_avant')
+                    ->label('Mettre en avant (Notre sélection du moment)')
+                    ->helperText('Apparaît dans la sélection en page d\'accueil.'),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('images')
                     ->label('Photos du produit')
                     ->collection('images')
@@ -103,6 +106,8 @@ class ProductResource extends Resource
                 Tables\Columns\IconColumn::make('actif')
                     ->label('Actif')
                     ->boolean(),
+                Tables\Columns\ToggleColumn::make('en_avant')
+                    ->label('En avant'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Créé le')
                     ->dateTime('d/m/Y')

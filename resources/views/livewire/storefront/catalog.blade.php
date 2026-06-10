@@ -64,11 +64,14 @@
                    class="w-full rounded-2xl border-2 border-stone-200 bg-white px-4 py-3 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#A1763C]">
         </div>
 
-        {{-- 2. PRODUITS EN AVANT --}}
+        {{-- 2. NOTRE SÉLECTION DU MOMENT --}}
         @if ($enAvant->isNotEmpty())
             <section class="mb-10">
                 <div class="mb-4 flex items-end justify-between">
-                    <h2 class="text-lg font-bold text-stone-900">Nos produits</h2>
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-[0.2em]" style="color:#A1763C;">Coup de cœur</span>
+                        <h2 class="text-lg font-bold text-stone-900">Notre sélection du moment</h2>
+                    </div>
                 </div>
                 <div class="-mx-4 flex gap-4 overflow-x-auto px-4 pb-2">
                     @foreach ($enAvant as $produit)
@@ -126,14 +129,24 @@
 
         {{-- 5. RECHERCHE PAR BESOIN --}}
         @if ($concerns->isNotEmpty())
-            <section class="mb-10">
-                <h2 class="text-lg font-bold text-stone-900">Trouvez selon votre besoin</h2>
-                <p class="mb-4 text-sm text-stone-500">Dites-nous ce que vous recherchez, on vous montre les produits adaptés.</p>
-                <div class="flex flex-wrap gap-2">
+            <section class="mb-12">
+                <div class="mb-5 text-center">
+                    <span class="text-xs font-semibold uppercase tracking-[0.2em]" style="color:#A1763C;">Sur-mesure</span>
+                    <h2 class="mt-1 text-xl font-extrabold text-stone-900">Trouvez selon votre besoin</h2>
+                    <p class="mt-1 text-sm text-stone-500">Choisissez ce qui vous correspond, on vous montre les produits adaptés.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                     @foreach ($concerns as $c)
                         <button wire:click="ouvrirBesoin('{{ $c->slug }}')"
-                                class="inline-flex items-center gap-1.5 rounded-full border-2 border-[#E8D9BF] bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-[#A1763C] hover:text-[#A1763C]">
-                            @if ($c->emoji)<span>{{ $c->emoji }}</span>@endif {{ $c->nom }}
+                                class="group relative overflow-hidden rounded-3xl border border-[#EADFCE] p-4 text-left transition hover:-translate-y-1 hover:shadow-xl"
+                                style="background:linear-gradient(150deg,#FFFFFF 0%,#FBF7F0 60%,#F3E9D6 100%);">
+                            <div class="absolute -right-6 -top-6 h-20 w-20 rounded-full opacity-[0.07] transition-transform duration-500 group-hover:scale-150" style="background:#A1763C;"></div>
+                            <div class="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm ring-1 ring-[#EADFCE]">{{ $c->emoji ?: '🌿' }}</div>
+                            <h3 class="relative mt-3 text-sm font-bold leading-tight text-stone-800">{{ $c->nom }}</h3>
+                            <span class="relative mt-2 inline-flex items-center gap-1 text-xs font-semibold" style="color:#A1763C;">
+                                Découvrir
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 transition group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                            </span>
                         </button>
                     @endforeach
                 </div>

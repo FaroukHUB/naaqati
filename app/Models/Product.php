@@ -23,11 +23,12 @@ class Product extends Model implements HasMedia
 
     protected $fillable = [
         'nom', 'slug', 'desc_courte', 'desc_longue', 'category_id',
-        'poids_grammes', 'prix_base', 'devise_code', 'actif',
+        'poids_grammes', 'prix_base', 'devise_code', 'actif', 'en_avant',
     ];
 
     protected $casts = [
         'actif' => 'boolean',
+        'en_avant' => 'boolean',
         'prix_base' => 'integer',
     ];
 
