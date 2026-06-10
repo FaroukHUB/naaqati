@@ -24,8 +24,8 @@
         <section
             x-data="{ s: 0, n: {{ max($heroSlides->count(), 1) }} }"
             x-init="if (n > 1) setInterval(() => s = (s + 1) % n, 6000)"
-            class="relative -mx-4 -mt-6 mb-10 h-[80vh] min-h-[480px] max-h-[720px] overflow-hidden"
-            style="background:linear-gradient(135deg,#C9A45E,#7C5827);"
+            class="relative -mt-6 mb-10 h-[80vh] min-h-[480px] max-h-[720px] overflow-hidden"
+            style="background:linear-gradient(135deg,#C9A45E,#7C5827); width:100vw; margin-left:calc(50% - 50vw);"
         >
             @if ($heroSlides->isEmpty())
                 <div class="flex h-full flex-col justify-center px-7 text-white" style="background:linear-gradient(135deg,#C9A45E 0%,#A1763C 45%,#7C5827 100%);">

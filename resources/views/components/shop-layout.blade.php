@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @livewireStyles
 </head>
-<body class="h-full bg-stone-50 text-stone-800 antialiased" style="font-family: 'Figtree', sans-serif;">
+<body class="h-full overflow-x-hidden bg-stone-50 text-stone-800 antialiased" style="font-family: 'Figtree', sans-serif;">
 
     {{-- Header allégé --}}
     <header class="sticky top-0 z-30 bg-[#FBF7F0]/90 backdrop-blur border-b border-[#EADfce]">
