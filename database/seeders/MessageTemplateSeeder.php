@@ -17,7 +17,8 @@ class MessageTemplateSeeder extends Seeder
                 'variables' => ['nom', 'numero', 'relais', 'adresse', 'batiment', 'code_portail', 'etage', 'creneau'],
                 'corps' => "السلام عليكم ورحمة الله وبركاته\n\n"
                     . "Votre commande {{numero}} est prête à récupérer, {{nom}}. 🌸\n\n"
-                    . "📍 {{relais}}\n{{adresse}}\nBâtiment : {{batiment}}\nCode portail : {{code_portail}}\nÉtage : {{etage}}\n{{instructions}}\n\n"
+                    . "📍 {{relais}}\n{{adresse}}\nBâtiment : {{batiment}}\nCode portail : {{code_portail}}\n"
+                    . "Code porte d'entrée : {{code_porte}}\nCode ascenseur : {{code_ascenseur}}\nÉtage : {{etage}}\n{{instructions}}\n\n"
                     . "Merci de confirmer votre heure de passage. Barak Allahou fik 🌿",
                 'actif' => true,
             ]

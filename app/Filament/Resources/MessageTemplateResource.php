@@ -35,7 +35,7 @@ class MessageTemplateResource extends Resource
                 ->rows(10)
                 ->required()
                 ->columnSpanFull()
-                ->helperText('Variables disponibles (recopiez-les telles quelles) : {{nom}} {{numero}} {{relais}} {{adresse}} {{batiment}} {{code_portail}} {{etage}} {{instructions}} {{date}} {{creneau}}'),
+                ->helperText('Variables disponibles : {{nom}} {{numero}} {{relais}} {{adresse}} {{batiment}} {{code_portail}} {{code_porte}} {{code_ascenseur}} {{etage}} {{instructions}} {{date}} {{creneau}}'),
             Forms\Components\Toggle::make('actif')
                 ->label('Actif')
                 ->default(true),

@@ -40,6 +40,10 @@ class RelaisResource extends Resource
                 ->label('Bâtiment / Résidence'),
             Forms\Components\TextInput::make('code_portail')
                 ->label('Code portail / Digicode'),
+            Forms\Components\TextInput::make('code_porte')
+                ->label('Code porte d\'entrée'),
+            Forms\Components\TextInput::make('code_ascenseur')
+                ->label('Code ascenseur'),
             Forms\Components\TextInput::make('etage')
                 ->label('Étage'),
             Forms\Components\Textarea::make('instructions_acces')

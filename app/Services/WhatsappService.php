@@ -41,6 +41,8 @@ class WhatsappService
             'adresse' => $relais?->adresse,
             'batiment' => $relais?->batiment,
             'code_portail' => $relais?->code_portail,
+            'code_porte' => $relais?->code_porte,
+            'code_ascenseur' => $relais?->code_ascenseur,
             'etage' => $relais?->etage,
             'instructions' => $relais?->instructions_acces,
             'date' => $order->date_retrait?->format('d/m/Y'),
