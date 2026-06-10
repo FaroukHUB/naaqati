@@ -2,7 +2,7 @@
     x-data="{ toast: '', show: false }"
     x-on:flash.window="toast = $event.detail.message; show = true; clearTimeout(window._t); window._t = setTimeout(() => show = false, 1800)"
 >
-    <div x-show="show" x-transition style="background-color:#B76E79;"
+    <div x-show="show" x-transition style="background-color:#A1763C;"
          class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 rounded-full px-5 py-2.5 text-sm font-medium text-white shadow-lg" x-cloak>
         <span x-text="toast"></span>
     </div>
@@ -14,11 +14,11 @@
     @if ($vide)
         <div class="rounded-2xl border border-dashed border-stone-200 bg-white p-12 text-center">
             <p class="text-stone-400">Votre panier est vide.</p>
-            <a href="{{ route('shop.catalog') }}" wire:navigate class="mt-4 inline-block rounded-xl px-5 py-2.5 text-sm font-semibold text-white" style="background-color:#B76E79;">Voir les produits</a>
+            <a href="{{ route('shop.catalog') }}" wire:navigate class="mt-4 inline-block rounded-xl px-5 py-2.5 text-sm font-semibold text-white" style="background-color:#A1763C;">Voir les produits</a>
         </div>
     @else
-        <div class="mb-6 flex items-start gap-4 rounded-2xl border border-[#E8C9D0] bg-gradient-to-br from-[#FBF1F3] to-white p-4 sm:p-5 shadow-sm">
-            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white shadow-sm" style="background:linear-gradient(135deg,#C98B96,#9B5563);">
+        <div class="mb-6 flex items-start gap-4 rounded-2xl border border-[#E8D9BF] bg-gradient-to-br from-[#F6EEDF] to-white p-4 sm:p-5 shadow-sm">
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white shadow-sm" style="background:linear-gradient(135deg,#C9A45E,#7C5827);">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>
             </div>
             <div>
@@ -36,7 +36,7 @@
                         {{-- En-tête paquet --}}
                         <div class="mb-3 flex items-center justify-between">
                             <h2 class="flex items-center gap-2 text-sm font-bold text-stone-800">
-                                <span class="flex h-6 w-6 items-center justify-center rounded-full text-xs text-white" style="background-color:#B76E79;">{{ $package['index'] }}</span>
+                                <span class="flex h-6 w-6 items-center justify-center rounded-full text-xs text-white" style="background-color:#A1763C;">{{ $package['index'] }}</span>
                                 Paquet {{ $package['index'] }}
                                 @if ($package['destinataire']) <span class="font-normal text-stone-400">· pour {{ $package['destinataire'] }}</span> @endif
                             </h2>
@@ -61,7 +61,7 @@
                                             <p class="text-xs text-stone-500">{{ number_format($line['prix_unitaire'] / 100, 0, ',', ' ') }} DA</p>
                                             @if ($packages->count() > 1)
                                                 <select wire:change="deplacer({{ $produit->id }}, '{{ $package['key'] }}', $event.target.value)"
-                                                        class="mt-1 rounded-lg border border-stone-200 py-1 pl-2 pr-6 text-[11px] text-stone-500 outline-none focus:border-[#B76E79]">
+                                                        class="mt-1 rounded-lg border border-stone-200 py-1 pl-2 pr-6 text-[11px] text-stone-500 outline-none focus:border-[#A1763C]">
                                                     <option value="">Déplacer vers…</option>
                                                     @foreach ($packages as $autre)
                                                         @if ($autre['key'] !== $package['key'])
@@ -91,14 +91,14 @@
                                         @php $embImg = $emb->getFirstMediaUrl('image'); $sel = $package['packaging_id'] === $emb->id; @endphp
                                         <button wire:click="choisirEmballage('{{ $package['key'] }}', {{ $emb->id }})"
                                                 @class(['relative w-24 overflow-hidden rounded-xl border-2 p-1.5 text-left transition', 'border-stone-200 hover:border-stone-300' => !$sel])
-                                                @style(['border-color:#B76E79;background-color:#FBF1F3' => $sel])>
+                                                @style(['border-color:#A1763C;background-color:#F6EEDF' => $sel])>
                                             <div class="h-12 overflow-hidden rounded-lg bg-stone-100">
                                                 @if ($embImg) <img src="{{ $embImg }}" class="h-full w-full object-cover" alt=""> @else <div class="flex h-full items-center justify-center text-stone-300"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25"/></svg></div> @endif
                                             </div>
                                             <p class="mt-1 truncate text-[11px] font-semibold text-stone-700">{{ $emb->nom }}</p>
                                             <p class="text-[10px] text-stone-400">{{ $emb->prix > 0 ? '+'.number_format($emb->prix / 100, 0, ',', ' ').' DA' : 'Gratuit' }}</p>
                                             @if ($sel)
-                                                <span class="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full text-white" style="background-color:#B76E79;"><svg xmlns="http://www.w3.org/2000/svg" class="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+                                                <span class="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full text-white" style="background-color:#A1763C;"><svg xmlns="http://www.w3.org/2000/svg" class="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
                                             @endif
                                         </button>
                                     @endforeach
@@ -108,9 +108,9 @@
                             {{-- Destinataire + message --}}
                             <div class="mt-3 grid gap-2 sm:grid-cols-2">
                                 <input type="text" wire:model.blur="dest.{{ $package['key'] }}" placeholder="Pour qui ? (optionnel)"
-                                       class="rounded-xl border-2 border-stone-200 bg-white px-3 py-2 text-sm outline-none focus:border-[#B76E79]">
+                                       class="rounded-xl border-2 border-stone-200 bg-white px-3 py-2 text-sm outline-none focus:border-[#A1763C]">
                                 <input type="text" wire:model.blur="msg.{{ $package['key'] }}" placeholder="Petit mot / carte (optionnel)"
-                                       class="rounded-xl border-2 border-stone-200 bg-white px-3 py-2 text-sm outline-none focus:border-[#B76E79]">
+                                       class="rounded-xl border-2 border-stone-200 bg-white px-3 py-2 text-sm outline-none focus:border-[#A1763C]">
                             </div>
 
                             <p class="mt-3 text-right text-xs text-stone-500">Sous-total paquet : <span class="font-semibold text-stone-700">{{ number_format($package['total'] / 100, 0, ',', ' ') }} DA</span></p>
@@ -118,7 +118,7 @@
                     </div>
                 @endforeach
 
-                <button wire:click="ajouterPaquet" class="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-stone-300 py-3 text-sm font-semibold text-stone-500 transition hover:border-[#B76E79] hover:text-[#B76E79]">
+                <button wire:click="ajouterPaquet" class="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-stone-300 py-3 text-sm font-semibold text-stone-500 transition hover:border-[#A1763C] hover:text-[#A1763C]">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                     Nouveau paquet cadeau
                 </button>
@@ -134,7 +134,7 @@
                         <div class="my-3 border-t border-stone-100"></div>
                         <div class="flex justify-between text-base font-bold text-stone-900"><span>Total</span><span>{{ number_format($total / 100, 0, ',', ' ') }} DA</span></div>
                     </div>
-                    <button wire:click="commander" class="mt-5 w-full rounded-xl py-3 text-sm font-semibold text-white transition hover:opacity-90" style="background-color:#B76E79;">Passer la commande</button>
+                    <button wire:click="commander" class="mt-5 w-full rounded-xl py-3 text-sm font-semibold text-white transition hover:opacity-90" style="background-color:#A1763C;">Passer la commande</button>
                     <a href="{{ route('shop.catalog') }}" wire:navigate class="mt-2 block text-center text-xs text-stone-400 hover:text-stone-600">Continuer mes achats</a>
                 </div>
             </div>

@@ -27,9 +27,12 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('Naaqati')
+            ->brandLogo(fn () => file_exists(public_path('images/logo.png')) ? asset('images/logo.png') : null)
+            ->brandLogoHeight('2.5rem')
             ->colors([
-                // Rose poudré Naaqati
-                'primary' => Color::hex('#B76E79'),
+                // Doré / bronze Naaqati (logo « Produits du Sahara »)
+                'primary' => Color::hex('#A1763C'),
             ])
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')

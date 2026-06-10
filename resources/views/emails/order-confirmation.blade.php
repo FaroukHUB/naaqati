@@ -2,7 +2,7 @@
 <html lang="fr">
 <body style="font-family: Arial, sans-serif; color:#333; background:#fafaf9; padding:20px;">
     <div style="max-width:560px;margin:auto;background:#fff;border-radius:12px;padding:24px;">
-        <h2 style="color:#B76E79;margin:0 0 8px;">Merci {{ $order->customer?->nom }} ! 🌸</h2>
+        <h2 style="color:#A1763C;margin:0 0 8px;">Merci {{ $order->customer?->nom }} ! 🌸</h2>
         <p style="margin:0 0 16px;color:#555;">Votre commande <strong>{{ $order->numero }}</strong> est bien enregistrée.</p>
 
         <div style="background:#fbf1f3;border-radius:8px;padding:16px;margin-bottom:16px;">

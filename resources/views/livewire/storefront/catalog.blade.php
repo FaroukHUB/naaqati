@@ -3,7 +3,7 @@
     x-on:flash.window="toast = $event.detail.message; show = true; clearTimeout(window._t); window._t = setTimeout(() => show = false, 1800)"
 >
     {{-- Toast --}}
-    <div x-show="show" x-transition style="background-color:#B76E79;"
+    <div x-show="show" x-transition style="background-color:#A1763C;"
          class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 rounded-full px-5 py-2.5 text-sm font-medium text-white shadow-lg"
          x-cloak>
         <span x-text="toast"></span>
@@ -11,10 +11,10 @@
 
     @php
         $gradients = [
-            'linear-gradient(135deg,#C98B96,#9B5563)',
+            'linear-gradient(135deg,#C9A45E,#7C5827)',
             'linear-gradient(135deg,#B89B72,#8C6E45)',
             'linear-gradient(135deg,#9CA98B,#5F7350)',
-            'linear-gradient(135deg,#A88BC9,#6E5586)',
+            'linear-gradient(135deg,#A88BC9,#7C5827)',
             'linear-gradient(135deg,#C9A88B,#8C6745)',
             'linear-gradient(135deg,#8BB6C9,#506E83)',
         ];
@@ -24,7 +24,7 @@
         {{-- ===== MODE GRILLE CATÉGORIES ===== --}}
 
         {{-- Bannière --}}
-        <div class="mb-5 overflow-hidden rounded-3xl px-6 py-7 text-white shadow-sm" style="background:linear-gradient(135deg,#C98B96 0%,#B76E79 45%,#9B5563 100%);">
+        <div class="mb-5 overflow-hidden rounded-3xl px-6 py-7 text-white shadow-sm" style="background:linear-gradient(135deg,#C9A45E 0%,#A1763C 45%,#7C5827 100%);">
             <p class="text-xs font-medium uppercase tracking-wider text-white/70">Cosmétiques naturels</p>
             <h1 class="mt-1 text-2xl font-extrabold leading-tight">Bienvenue chez Naaqati</h1>
             <p class="mt-1 text-sm text-white/90">Choisissez une catégorie, récupérez à Riadi City. 🌿</p>
@@ -34,7 +34,7 @@
         <div class="mb-5">
             <input type="search" wire:model.live.debounce.400ms="search"
                    placeholder="Rechercher un produit…"
-                   class="w-full rounded-2xl border-2 border-stone-200 bg-white px-4 py-3 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#B76E79]">
+                   class="w-full rounded-2xl border-2 border-stone-200 bg-white px-4 py-3 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#A1763C]">
         </div>
 
         @if ($categories->isEmpty())
@@ -80,7 +80,7 @@
         <div class="mb-5">
             <input type="search" wire:model.live.debounce.400ms="search"
                    placeholder="Rechercher un produit…"
-                   class="w-full rounded-2xl border-2 border-stone-200 bg-white px-4 py-3 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#B76E79]">
+                   class="w-full rounded-2xl border-2 border-stone-200 bg-white px-4 py-3 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#A1763C]">
         </div>
 
         @if ($produits->isEmpty())
@@ -109,13 +109,13 @@
                         <div class="flex flex-1 flex-col p-3">
                             <p class="text-xs text-stone-400">{{ $produit->category->nom }}</p>
                             <a href="{{ route('shop.product', $produit->slug) }}" wire:navigate class="text-sm font-semibold leading-tight text-stone-800 hover:underline">{{ $produit->nom }}</a>
-                            <p class="mt-1 text-base font-bold" style="color:#B76E79;">
+                            <p class="mt-1 text-base font-bold" style="color:#A1763C;">
                                 {{ number_format($prix / 100, 0, ',', ' ') }} DA
                             </p>
                             <div class="mt-auto pt-3">
                                 @if ($dispo > 0)
                                     <button wire:click="ajouter({{ $produit->id }})" wire:loading.attr="disabled"
-                                            class="w-full rounded-xl py-2 text-sm font-semibold text-white transition hover:opacity-90" style="background-color:#B76E79;">
+                                            class="w-full rounded-xl py-2 text-sm font-semibold text-white transition hover:opacity-90" style="background-color:#A1763C;">
                                         Ajouter
                                     </button>
                                 @else

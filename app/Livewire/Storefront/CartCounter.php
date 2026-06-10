@@ -26,7 +26,7 @@ class CartCounter extends Component
         return <<<'BLADE'
             <span>
                 @if ($count > 0)
-                    <span class="absolute -top-2 -right-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white" style="background-color:#B76E79;">
+                    <span class="absolute -top-2 -right-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white" style="background-color:#A1763C;">
                         {{ $count }}
                     </span>
                 @endif

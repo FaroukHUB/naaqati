@@ -3,7 +3,7 @@
     x-on:flash.window="toast = $event.detail.message; show = true; clearTimeout(window._t); window._t = setTimeout(() => show = false, 2000)"
 >
     {{-- Toast --}}
-    <div x-show="show" x-transition style="background-color:#B76E79;"
+    <div x-show="show" x-transition style="background-color:#A1763C;"
          class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 rounded-full px-5 py-2.5 text-sm font-medium text-white shadow-lg" x-cloak>
         <span x-text="toast"></span>
     </div>
@@ -41,7 +41,7 @@
                     @foreach ($images as $idx => $media)
                         <button type="button" @click="current = {{ $idx }}"
                                 class="h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 transition"
-                                :class="current === {{ $idx }} ? 'border-[#B76E79]' : 'border-transparent'">
+                                :class="current === {{ $idx }} ? 'border-[#A1763C]' : 'border-transparent'">
                             <img src="{{ $media->getUrl() }}" class="h-full w-full object-cover" alt="">
                         </button>
                     @endforeach
@@ -56,7 +56,7 @@
 
             <h1 class="mt-3 text-2xl font-extrabold leading-tight text-stone-900">{{ $product->nom }}</h1>
 
-            <p class="mt-2 text-2xl font-bold" style="color:#B76E79;">{{ number_format($prix / 100, 0, ',', ' ') }} DA</p>
+            <p class="mt-2 text-2xl font-bold" style="color:#A1763C;">{{ number_format($prix / 100, 0, ',', ' ') }} DA</p>
 
             @if ($product->desc_courte)
                 <p class="mt-3 text-sm leading-relaxed text-stone-600">{{ $product->desc_courte }}</p>
@@ -85,7 +85,7 @@
                     </div>
                     <button wire:click="ajouter" wire:loading.attr="disabled"
                             class="flex-1 rounded-xl py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
-                            style="background-color:#B76E79;">
+                            style="background-color:#A1763C;">
                         Ajouter au panier
                     </button>
                 </div>
@@ -125,7 +125,7 @@
                         </div>
                         <div class="p-3">
                             <h3 class="truncate text-sm font-semibold text-stone-800">{{ $sim->nom }}</h3>
-                            <p class="mt-1 text-sm font-bold" style="color:#B76E79;">{{ number_format($simPrix / 100, 0, ',', ' ') }} DA</p>
+                            <p class="mt-1 text-sm font-bold" style="color:#A1763C;">{{ number_format($simPrix / 100, 0, ',', ' ') }} DA</p>
                         </div>
                     </a>
                 @endforeach

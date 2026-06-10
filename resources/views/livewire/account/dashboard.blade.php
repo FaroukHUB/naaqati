@@ -2,7 +2,7 @@
     x-data="{ toast: '', show: false }"
     x-on:flash.window="toast = $event.detail.message; show = true; clearTimeout(window._t); window._t = setTimeout(() => show = false, 2000)"
 >
-    <div x-show="show" x-transition style="background-color:#B76E79;"
+    <div x-show="show" x-transition style="background-color:#A1763C;"
          class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 rounded-full px-5 py-2.5 text-sm font-medium text-white shadow-lg" x-cloak>
         <span x-text="toast"></span>
     </div>
@@ -16,7 +16,7 @@
             'terminee' => 'bg-emerald-100 text-emerald-700',
             'annulee' => 'bg-red-100 text-red-600',
         ];
-        $cls = 'w-full rounded-xl border-2 border-stone-200 bg-white px-4 py-3 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#B76E79]';
+        $cls = 'w-full rounded-xl border-2 border-stone-200 bg-white px-4 py-3 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#A1763C]';
     @endphp
 
     {{-- En-tête --}}
@@ -57,10 +57,10 @@
                     <input type="text" wire:model="ville" class="{{ $cls }}">
                 </div>
                 <label class="flex items-center gap-2 text-sm text-stone-600">
-                    <input type="checkbox" wire:model="newsletter" class="rounded border-stone-300 text-[#B76E79] focus:ring-0">
+                    <input type="checkbox" wire:model="newsletter" class="rounded border-stone-300 text-[#A1763C] focus:ring-0">
                     Recevoir la newsletter (nouveautés &amp; offres)
                 </label>
-                <button type="submit" class="rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-90" style="background-color:#B76E79;">
+                <button type="submit" class="rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-90" style="background-color:#A1763C;">
                     Enregistrer
                 </button>
             </form>
@@ -71,7 +71,7 @@
             <h2 class="mb-4 text-base font-bold text-stone-900">Mes commandes</h2>
             @if ($commandes->isEmpty())
                 <p class="text-sm text-stone-400">Vous n'avez pas encore de commande.</p>
-                <a href="{{ route('shop.catalog') }}" wire:navigate class="mt-3 inline-block rounded-xl px-4 py-2 text-sm font-semibold text-white" style="background-color:#B76E79;">Découvrir la boutique</a>
+                <a href="{{ route('shop.catalog') }}" wire:navigate class="mt-3 inline-block rounded-xl px-4 py-2 text-sm font-semibold text-white" style="background-color:#A1763C;">Découvrir la boutique</a>
             @else
                 <div class="space-y-3">
                     @foreach ($commandes as $cmd)
@@ -108,7 +108,7 @@
                         </div>
                         <div class="p-2">
                             <h3 class="truncate text-xs font-semibold text-stone-800">{{ $produit->nom }}</h3>
-                            <p class="text-xs font-bold" style="color:#B76E79;">{{ number_format($prix / 100, 0, ',', ' ') }} DA</p>
+                            <p class="text-xs font-bold" style="color:#A1763C;">{{ number_format($prix / 100, 0, ',', ' ') }} DA</p>
                         </div>
                     </a>
                 @endforeach

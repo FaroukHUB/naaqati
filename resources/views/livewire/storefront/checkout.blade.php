@@ -9,25 +9,25 @@
                 <h2 class="mb-4 text-base font-bold text-stone-900">Mes coordonnées</h2>
                 <div class="grid gap-4 sm:grid-cols-2">
                     <div>
-                        <label class="mb-1 block text-sm font-semibold text-stone-700">Nom complet <span style="color:#B76E79;">*</span></label>
-                        <input type="text" wire:model="nom" class="w-full rounded-xl border-2 border-stone-200 bg-white px-4 py-3.5 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#B76E79]">
+                        <label class="mb-1 block text-sm font-semibold text-stone-700">Nom complet <span style="color:#A1763C;">*</span></label>
+                        <input type="text" wire:model="nom" class="w-full rounded-xl border-2 border-stone-200 bg-white px-4 py-3.5 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#A1763C]">
                         @error('nom') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm font-semibold text-stone-700">Téléphone / WhatsApp <span style="color:#B76E79;">*</span></label>
+                        <label class="mb-1 block text-sm font-semibold text-stone-700">Téléphone / WhatsApp <span style="color:#A1763C;">*</span></label>
                         @auth('customer')
                             <input type="tel" value="+{{ auth('customer')->user()->telephone }}" disabled
                                    class="w-full rounded-xl border-2 border-stone-200 bg-stone-50 px-4 py-3.5 text-base text-stone-500 outline-none">
                             <p class="mt-1 text-xs text-stone-400">Numéro de votre compte.</p>
                         @else
                             <div class="flex gap-2">
-                                <select wire:model="indicatif" class="w-28 shrink-0 rounded-xl border-2 border-stone-200 bg-white px-2 py-3.5 text-base text-stone-900 outline-none focus:border-[#B76E79]">
+                                <select wire:model="indicatif" class="w-28 shrink-0 rounded-xl border-2 border-stone-200 bg-white px-2 py-3.5 text-base text-stone-900 outline-none focus:border-[#A1763C]">
                                     @foreach (\App\Support\Phone::INDICATIFS as $code => $lbl)
                                         <option value="{{ $code }}">{{ $lbl }}</option>
                                     @endforeach
                                 </select>
                                 <input type="tel" wire:model="telephone" placeholder="555 12 34 56"
-                                       class="flex-1 rounded-xl border-2 border-stone-200 bg-white px-4 py-3.5 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#B76E79]">
+                                       class="flex-1 rounded-xl border-2 border-stone-200 bg-white px-4 py-3.5 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#A1763C]">
                             </div>
                             <p class="mt-1 text-xs text-stone-400">C'est sur ce numéro que vous recevrez la notification WhatsApp.</p>
                             @error('telephone') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
@@ -35,7 +35,7 @@
                     </div>
                     <div class="sm:col-span-2">
                         <label class="mb-1 block text-sm font-semibold text-stone-700">Email <span class="font-normal text-stone-400">(optionnel)</span></label>
-                        <input type="email" wire:model="email" class="w-full rounded-xl border-2 border-stone-200 bg-white px-4 py-3.5 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#B76E79]">
+                        <input type="email" wire:model="email" class="w-full rounded-xl border-2 border-stone-200 bg-white px-4 py-3.5 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#A1763C]">
                         @error('email') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
                     </div>
                 </div>
@@ -52,13 +52,13 @@
                         @php $dateActive = $dateMode === 'date' && $date_retrait === $date; @endphp
                         <button type="button" wire:click="selectDate('{{ $date }}')"
                                 @class(['rounded-xl px-3 py-2 text-sm font-medium transition', 'text-white' => $dateActive, 'bg-white text-stone-600 border border-stone-200 hover:border-stone-300' => !$dateActive])
-                                @style(['background-color:#B76E79' => $dateActive])>
+                                @style(['background-color:#A1763C' => $dateActive])>
                             {{ \Carbon\Carbon::parse($date)->isoFormat('ddd D MMM') }}
                         </button>
                     @endforeach
                     <button type="button" wire:click="setDateMode('inconnue')"
                             @class(['rounded-xl px-3 py-2 text-sm font-medium transition', 'text-white' => $dateMode === 'inconnue', 'bg-white text-stone-600 border border-stone-200 hover:border-stone-300' => $dateMode !== 'inconnue'])
-                            @style(['background-color:#B76E79' => $dateMode === 'inconnue'])>
+                            @style(['background-color:#A1763C' => $dateMode === 'inconnue'])>
                         Je ne sais pas encore
                     </button>
                 </div>
@@ -71,7 +71,7 @@
                         @foreach (['creneau' => 'Créneau', 'precise' => 'Heure précise', 'inconnue' => 'Je ne sais pas'] as $m => $lbl)
                             <button type="button" wire:click="setHeureMode('{{ $m }}')"
                                     @class(['rounded-full px-3 py-1.5 text-xs font-medium transition', 'text-white' => $heureMode === $m, 'bg-stone-100 text-stone-500 hover:bg-stone-200' => $heureMode !== $m])
-                                    @style(['background-color:#B76E79' => $heureMode === $m])>{{ $lbl }}</button>
+                                    @style(['background-color:#A1763C' => $heureMode === $m])>{{ $lbl }}</button>
                         @endforeach
                     </div>
 
@@ -80,7 +80,7 @@
                             @foreach ($dates[$date_retrait] as $c)
                                 <button type="button" wire:click="selectCreneau('{{ $c }}')"
                                         @class(['rounded-xl px-4 py-2 text-sm font-medium transition', 'text-white' => $creneau === $c, 'bg-white text-stone-600 border border-stone-200 hover:border-stone-300' => $creneau !== $c])
-                                        @style(['background-color:#B76E79' => $creneau === $c])>
+                                        @style(['background-color:#A1763C' => $creneau === $c])>
                                     {{ $creneauxLabels[$c] ?? ucfirst($c) }}
                                 </button>
                             @endforeach
@@ -88,7 +88,7 @@
                         @error('creneau') <p class="mt-2 text-xs text-red-500">{{ $message }}</p> @enderror
                     @elseif ($heureMode === 'precise')
                         <input type="time" wire:model="heurePrecise"
-                               class="rounded-xl border-2 border-stone-200 bg-white px-4 py-2.5 text-base text-stone-900 outline-none focus:border-[#B76E79]">
+                               class="rounded-xl border-2 border-stone-200 bg-white px-4 py-2.5 text-base text-stone-900 outline-none focus:border-[#A1763C]">
                         @error('heurePrecise') <p class="mt-2 text-xs text-red-500">{{ $message }}</p> @enderror
                     @else
                         <p class="text-xs text-stone-400">Pas de souci — vous nous préciserez l'heure le moment venu.</p>
@@ -98,15 +98,15 @@
 
             {{-- Qui récupère --}}
             <div class="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm">
-                <label class="mb-3 block text-sm font-bold text-stone-900">Qui viendra récupérer ? <span style="color:#B76E79;">*</span></label>
+                <label class="mb-3 block text-sm font-bold text-stone-900">Qui viendra récupérer ? <span style="color:#A1763C;">*</span></label>
                 <div class="grid gap-2 sm:grid-cols-2">
                     @foreach ($recuperateurOptions as $key => $libelle)
                         @php $sel = $recuperateur === $key; @endphp
                         <button type="button" wire:click="selectRecuperateur('{{ $key }}')"
                                 @class(['flex items-center gap-3 rounded-xl border-2 p-3 text-left transition', 'border-stone-200 hover:border-stone-300' => !$sel])
-                                @style(['border-color:#B76E79;background-color:#FBF1F3' => $sel])>
+                                @style(['border-color:#A1763C;background-color:#F6EEDF' => $sel])>
                             <span @class(['flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2', 'border-stone-300' => !$sel])
-                                  @style(['border-color:#B76E79;background-color:#B76E79' => $sel])>
+                                  @style(['border-color:#A1763C;background-color:#A1763C' => $sel])>
                                 @if ($sel)
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                 @endif
@@ -126,7 +126,7 @@
             {{-- Commentaire --}}
             <div class="rounded-2xl border border-stone-100 bg-white p-5 shadow-sm">
                 <label class="mb-1 block text-sm font-bold text-stone-900">Commentaire <span class="font-normal text-stone-400">(optionnel)</span></label>
-                <textarea wire:model="commentaire" rows="3" class="w-full rounded-xl border-2 border-stone-200 bg-white px-4 py-3.5 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#B76E79]" placeholder="Une précision pour votre commande ?"></textarea>
+                <textarea wire:model="commentaire" rows="3" class="w-full rounded-xl border-2 border-stone-200 bg-white px-4 py-3.5 text-base text-stone-900 placeholder-stone-400 shadow-sm outline-none transition focus:border-[#A1763C]" placeholder="Une précision pour votre commande ?"></textarea>
             </div>
         </div>
 
@@ -161,7 +161,7 @@
                 </div>
                 <button type="submit" wire:loading.attr="disabled"
                         class="mt-5 w-full rounded-xl py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
-                        style="background-color:#B76E79;">
+                        style="background-color:#A1763C;">
                     <span wire:loading.remove>Confirmer la commande</span>
                     <span wire:loading>Traitement…</span>
                 </button>
