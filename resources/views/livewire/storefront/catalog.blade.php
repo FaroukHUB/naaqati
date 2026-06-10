@@ -20,38 +20,40 @@
     @if (! $modeProduits)
         {{-- ====================== ACCUEIL ====================== --}}
 
-        {{-- 1. HERO SLIDER --}}
+        {{-- 1. HERO --}}
         <section
             x-data="{ s: 0, n: {{ max($heroSlides->count(), 1) }} }"
-            x-init="if (n > 1) setInterval(() => s = (s + 1) % n, 5000)"
-            class="relative mb-10 overflow-hidden rounded-3xl shadow-sm"
+            x-init="if (n > 1) setInterval(() => s = (s + 1) % n, 6000)"
+            class="relative -mx-4 -mt-6 mb-10 h-[80vh] min-h-[480px] max-h-[720px] overflow-hidden"
         >
             @if ($heroSlides->isEmpty())
-                <div class="flex min-h-[230px] flex-col justify-center px-7 py-10 text-white" style="background:linear-gradient(135deg,#C9A45E 0%,#A1763C 45%,#7C5827 100%);">
-                    <p class="text-xs font-medium uppercase tracking-[0.25em] text-white/70">Produits du Sahara</p>
-                    <h1 class="mt-2 text-3xl font-extrabold leading-tight">Bienvenue chez Naaqati</h1>
-                    <p class="mt-2 max-w-md text-sm text-white/90">Cosmétiques naturels du Sahara — savons, huiles, muscs, henné… à récupérer à Riadi City.</p>
+                <div class="flex h-full flex-col justify-center px-7 text-white" style="background:linear-gradient(135deg,#C9A45E 0%,#A1763C 45%,#7C5827 100%);">
+                    <p class="text-xs font-semibold uppercase tracking-[0.25em] text-white/70">Produits du Sahara</p>
+                    <h1 class="mt-3 text-4xl font-extrabold leading-tight">Bienvenue chez Naaqati</h1>
+                    <p class="mt-3 max-w-md text-base text-white/90">Cosmétiques naturels du Sahara — savons, huiles, muscs, henné… à récupérer à Riadi City.</p>
                 </div>
             @else
                 @foreach ($heroSlides as $i => $slide)
                     @php $img = $slide->getFirstMediaUrl('image'); @endphp
-                    <div x-show="s === {{ $i }}" x-transition.opacity.duration.700ms @if (! $loop->first) x-cloak @endif
-                         class="relative flex min-h-[230px] flex-col justify-center px-7 py-10 text-white"
+                    <div class="absolute inset-0 transition-opacity duration-700 ease-in-out"
+                         :class="s === {{ $i }} ? 'opacity-100' : 'opacity-0 pointer-events-none'"
                          style="{{ $img ? "background-image:url('{$img}');background-size:cover;background-position:center;" : 'background:linear-gradient(135deg,#C9A45E,#7C5827);' }}">
-                        <div class="absolute inset-0" style="background:linear-gradient(90deg,rgba(60,40,15,0.55),rgba(60,40,15,0.15));"></div>
-                        <div class="relative max-w-md">
-                            @if ($slide->titre)<h1 class="text-3xl font-extrabold leading-tight drop-shadow">{{ $slide->titre }}</h1>@endif
-                            @if ($slide->sous_titre)<p class="mt-2 text-sm text-white/90 drop-shadow">{{ $slide->sous_titre }}</p>@endif
-                            @if ($slide->bouton_texte)
-                                <a href="{{ $slide->lien ?: route('shop.catalog') }}" class="mt-4 inline-block rounded-xl bg-white px-5 py-2.5 text-sm font-semibold" style="color:#7C5827;">{{ $slide->bouton_texte }}</a>
-                            @endif
+                        <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(45,30,12,0.78) 0%, rgba(45,30,12,0.15) 55%, rgba(45,30,12,0.05) 100%);"></div>
+                        <div class="relative flex h-full flex-col justify-end px-7 pb-16 text-white">
+                            <div class="max-w-lg">
+                                @if ($slide->titre)<h1 class="text-3xl font-extrabold leading-tight drop-shadow sm:text-4xl">{{ $slide->titre }}</h1>@endif
+                                @if ($slide->sous_titre)<p class="mt-2 text-base text-white/90 drop-shadow">{{ $slide->sous_titre }}</p>@endif
+                                @if ($slide->bouton_texte)
+                                    <a href="{{ $slide->lien ?: route('shop.catalog') }}" class="mt-5 inline-block rounded-xl bg-white px-6 py-3 text-sm font-semibold shadow" style="color:#7C5827;">{{ $slide->bouton_texte }}</a>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @endforeach
                 @if ($heroSlides->count() > 1)
-                    <div class="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
+                    <div class="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2">
                         @foreach ($heroSlides as $i => $slide)
-                            <button @click="s = {{ $i }}" class="h-2 rounded-full transition-all" :class="s === {{ $i }} ? 'w-5 bg-white' : 'w-2 bg-white/50'"></button>
+                            <button @click="s = {{ $i }}" class="h-2 rounded-full transition-all" :class="s === {{ $i }} ? 'w-6 bg-white' : 'w-2 bg-white/50'"></button>
                         @endforeach
                     </div>
                 @endif
