@@ -33,3 +33,36 @@ self.addEventListener('fetch', (event) => {
             .catch(() => caches.match(req))
     );
 });
+
+// --- Notifications push ---
+self.addEventListener('push', (event) => {
+    let data = { title: 'Naaqati', body: 'Nouvelle notification', url: '/admin/orders' };
+    try {
+        if (event.data) {
+            data = Object.assign(data, event.data.json());
+        }
+    } catch (e) {}
+
+    event.waitUntil(
+        self.registration.showNotification(data.title, {
+            body: data.body,
+            icon: '/icons/icon-192.png',
+            badge: '/icons/icon-192.png',
+            vibrate: [120, 60, 120],
+            data: { url: data.url },
+        })
+    );
+});
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    const url = (event.notification.data && event.notification.data.url) || '/admin/orders';
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+            for (const c of list) {
+                if ('focus' in c) { c.navigate(url); return c.focus(); }
+            }
+            return clients.openWindow(url);
+        })
+    );
+});

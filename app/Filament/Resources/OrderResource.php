@@ -31,6 +31,18 @@ class OrderResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'numero';
 
+    public static function getNavigationBadge(): ?string
+    {
+        $n = static::getModel()::where('statut', OrderStatus::Recue->value)->count();
+
+        return $n > 0 ? (string) $n : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'danger';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

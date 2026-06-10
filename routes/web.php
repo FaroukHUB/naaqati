@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\OrderWhatsappController;
+use App\Http\Controllers\PushSubscriptionController;
 use App\Livewire\Account\Dashboard as AccountDashboard;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
@@ -42,3 +43,8 @@ Route::get('/commande/{numero}/confirmation', function (string $numero) {
 Route::get('/admin/orders/{order}/whatsapp', OrderWhatsappController::class)
     ->middleware(['web', 'auth'])
     ->name('admin.orders.whatsapp');
+
+// --- Abonnement aux notifications push (admin connecté) ---
+Route::post('/push/subscribe', PushSubscriptionController::class)
+    ->middleware(['web', 'auth'])
+    ->name('push.subscribe');

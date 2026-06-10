@@ -11,6 +11,7 @@
         "filament/spatie-laravel-media-library-plugin": "^3.2",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
+        "minishlink/web-push": "^10.1",
         "spatie/laravel-medialibrary": "^11.0",
         "spatie/laravel-permission": "^6.0",
         "spatie/laravel-sluggable": "^3.6"

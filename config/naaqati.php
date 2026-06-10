@@ -20,4 +20,7 @@ return [
 
     // Slug du relais par défaut (phase 1).
     'relais_defaut_slug' => 'riadi-city',
+
+    // Email qui reçoit les notifications de commande (côté boutique).
+    'admin_email' => env('NAAQATI_ADMIN_EMAIL'),
 ];
