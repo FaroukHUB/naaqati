@@ -122,6 +122,12 @@ class ProductResource extends Resource
                     ->label('Actif'),
             ])
             ->actions([
+                Tables\Actions\Action::make('preview')
+                    ->label('Voir')
+                    ->icon('heroicon-o-eye')
+                    ->color('gray')
+                    ->url(fn ($record) => route('shop.product', $record->slug))
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make()->label('Modifier'),
             ])
             ->bulkActions([
