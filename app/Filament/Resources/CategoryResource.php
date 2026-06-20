@@ -96,10 +96,39 @@ class CategoryResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->label('Modifier'),
+                Tables\Actions\DeleteAction::make()
+                    ->label('Supprimer')
+                    ->before(function (\App\Models\Category $record, Tables\Actions\DeleteAction $action) {
+                        if ($record->products()->exists() || $record->children()->exists()) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Suppression impossible')
+                                ->body('Cette catégorie contient des produits ou des sous-catégories. Déplacez-les (ou supprimez-les) d\'abord.')
+                                ->danger()
+                                ->persistent()
+                                ->send();
+                            $action->cancel();
+                        }
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()->label('Supprimer'),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label('Supprimer')
+                        ->before(function (\Illuminate\Support\Collection $records, Tables\Actions\DeleteBulkAction $action) {
+                            foreach ($records as $record) {
+                                if ($record->products()->exists() || $record->children()->exists()) {
+                                    \Filament\Notifications\Notification::make()
+                                        ->title('Suppression impossible')
+                                        ->body('Une ou plusieurs catégories sélectionnées contiennent des produits ou des sous-catégories.')
+                                        ->danger()
+                                        ->persistent()
+                                        ->send();
+                                    $action->cancel();
+
+                                    return;
+                                }
+                            }
+                        }),
                 ]),
             ])
             ->defaultSort('position');
