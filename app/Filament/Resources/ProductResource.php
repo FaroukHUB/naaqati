@@ -47,6 +47,13 @@ class ProductResource extends Resource
                     ->suffix('DA')
                     ->formatStateUsing(fn ($state) => $state !== null ? $state / 100 : null)
                     ->dehydrateStateUsing(fn ($state) => (int) round(((float) $state) * 100)),
+                Forms\Components\TextInput::make('stock_initial')
+                    ->label('Stock initial à Riadi City')
+                    ->numeric()
+                    ->default(0)
+                    ->minValue(0)
+                    ->visibleOn('create')
+                    ->helperText('Crée automatiquement le stock à Riadi City pour que le produit apparaisse sur la boutique.'),
                 Forms\Components\TextInput::make('poids_grammes')
                     ->label('Poids (grammes)')
                     ->numeric()
