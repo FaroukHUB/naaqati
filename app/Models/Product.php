@@ -22,8 +22,9 @@ class Product extends Model implements HasMedia
     }
 
     protected $fillable = [
-        'nom', 'slug', 'desc_courte', 'desc_longue', 'category_id',
-        'poids_grammes', 'prix_base', 'devise_code', 'actif', 'en_avant',
+        'nom', 'slug', 'desc_courte', 'desc_longue',
+        'ingredients', 'conseils', 'bienfaits', 'precautions', 'conservation',
+        'category_id', 'poids_grammes', 'prix_base', 'devise_code', 'actif', 'en_avant',
     ];
 
     protected $casts = [

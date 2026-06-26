@@ -66,6 +66,17 @@ class ProductResource extends Resource
                     ->label('Description longue')
                     ->rows(5)
                     ->columnSpanFull(),
+                Forms\Components\Section::make('Onglets de la fiche produit')
+                    ->description('Ces sections apparaissent en onglets sur la fiche. Laissez vide celles que vous n\'utilisez pas.')
+                    ->collapsed()
+                    ->columnSpanFull()
+                    ->schema([
+                        Forms\Components\Textarea::make('ingredients')->label('Ingrédients')->rows(4),
+                        Forms\Components\Textarea::make('conseils')->label('Conseils d\'utilisation')->rows(4),
+                        Forms\Components\Textarea::make('bienfaits')->label('Bienfaits')->rows(4),
+                        Forms\Components\Textarea::make('precautions')->label('Précautions')->rows(3),
+                        Forms\Components\Textarea::make('conservation')->label('Conservation')->rows(2),
+                    ]),
                 Forms\Components\Select::make('concerns')
                     ->label('Besoins (recherche par besoin)')
                     ->relationship('concerns', 'nom')

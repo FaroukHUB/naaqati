@@ -99,15 +99,39 @@
                 </p>
             </div>
 
-            {{-- Description longue --}}
-            @if ($product->desc_longue)
-                <div class="mt-6">
-                    <h2 class="mb-2 text-sm font-bold text-stone-900">Description</h2>
-                    <div class="prose-sm text-sm leading-relaxed text-stone-600 whitespace-pre-line">{{ $product->desc_longue }}</div>
-                </div>
-            @endif
         </div>
     </div>
+
+    {{-- Onglets : description, ingrédients, conseils, bienfaits, précautions, conservation --}}
+    @php
+        $onglets = collect([
+            ['key' => 'description', 'label' => 'Description', 'content' => $product->desc_longue],
+            ['key' => 'ingredients', 'label' => 'Ingrédients', 'content' => $product->ingredients],
+            ['key' => 'conseils', 'label' => "Conseils d'utilisation", 'content' => $product->conseils],
+            ['key' => 'bienfaits', 'label' => 'Bienfaits', 'content' => $product->bienfaits],
+            ['key' => 'precautions', 'label' => 'Précautions', 'content' => $product->precautions],
+            ['key' => 'conservation', 'label' => 'Conservation', 'content' => $product->conservation],
+        ])->filter(fn ($o) => filled($o['content']))->values();
+    @endphp
+    @if ($onglets->isNotEmpty())
+        <div class="mt-10" x-data="{ tab: '{{ $onglets->first()['key'] }}' }">
+            <div class="-mx-4 flex gap-1 overflow-x-auto border-b border-stone-100 px-4">
+                @foreach ($onglets as $o)
+                    <button type="button" @click="tab='{{ $o['key'] }}'"
+                            class="shrink-0 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-semibold transition"
+                            :class="tab==='{{ $o['key'] }}' ? '' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                            :style="tab==='{{ $o['key'] }}' ? 'color:#A1763C;border-color:#A1763C' : ''">
+                        {{ $o['label'] }}
+                    </button>
+                @endforeach
+            </div>
+            @foreach ($onglets as $o)
+                <div x-show="tab==='{{ $o['key'] }}'" x-transition.opacity
+                     class="whitespace-pre-line pt-4 text-sm leading-relaxed text-stone-600"
+                     @if (! $loop->first) x-cloak @endif>{{ $o['content'] }}</div>
+            @endforeach
+        </div>
+    @endif
 
     {{-- Produits similaires --}}
     @if ($similaires->isNotEmpty())
