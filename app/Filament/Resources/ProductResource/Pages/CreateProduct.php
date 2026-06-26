@@ -13,6 +13,13 @@ class CreateProduct extends CreateRecord
 
     protected int $stockInitial = 0;
 
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return $this->stockInitial > 0
+            ? 'Produit créé et publié sur la boutique ✅'
+            : 'Produit créé ✅ — ajoutez-lui du stock (bouton « Stock ») pour qu\'il apparaisse';
+    }
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $this->stockInitial = (int) ($data['stock_initial'] ?? 0);

@@ -3,9 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
+use App\Models\Inventory;
 use App\Models\Product;
+use App\Services\StockService;
+use App\Support\CurrentRelais;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,6 +29,23 @@ class ProductResource extends Resource
     protected static ?string $pluralModelLabel = 'Produits';
 
     protected static ?string $recordTitleAttribute = 'nom';
+
+    /** Stock disponible du produit au relais courant. */
+    public static function stockActuel(Product $record): int
+    {
+        return (int) (Inventory::where('product_id', $record->id)->value('stock_disponible') ?? 0);
+    }
+
+    /** Met à jour (ou crée) le stock du produit au relais courant, avec journal. */
+    public static function appliquerStock(Product $record, int $stock): void
+    {
+        $relaisId = app(CurrentRelais::class)->id();
+        $inventory = Inventory::firstOrCreate(
+            ['product_id' => $record->id, 'relais_id' => $relaisId],
+            ['actif' => true],
+        );
+        app(StockService::class)->ajusterManuellement($inventory, max(0, $stock), 'Réapprovisionnement (fiche produit)');
+    }
 
     public static function form(Form $form): Form
     {
@@ -54,6 +75,12 @@ class ProductResource extends Resource
                     ->minValue(0)
                     ->visibleOn('create')
                     ->helperText('Crée automatiquement le stock à Riadi City pour que le produit apparaisse sur la boutique.'),
+                Forms\Components\Placeholder::make('stock_actuel')
+                    ->label('Stock actuel à Riadi City')
+                    ->visibleOn('edit')
+                    ->content(fn (?Product $record) => $record
+                        ? static::stockActuel($record) . ' unité(s) — utilisez le bouton « Stock » en haut pour modifier'
+                        : '—'),
                 Forms\Components\TextInput::make('poids_grammes')
                     ->label('Poids (grammes)')
                     ->numeric()
@@ -122,6 +149,11 @@ class ProductResource extends Resource
                     ->label('Prix')
                     ->money('DZD', divideBy: 100)
                     ->sortable(),
+                Tables\Columns\TextColumn::make('stock')
+                    ->label('Stock')
+                    ->getStateUsing(fn (Product $record) => static::stockActuel($record))
+                    ->badge()
+                    ->color(fn ($state) => $state > 0 ? 'success' : 'danger'),
                 Tables\Columns\IconColumn::make('actif')
                     ->label('Actif')
                     ->boolean(),
@@ -148,6 +180,24 @@ class ProductResource extends Resource
                     ->label('Actif'),
             ])
             ->actions([
+                Tables\Actions\Action::make('reappro')
+                    ->label('Stock')
+                    ->icon('heroicon-o-archive-box')
+                    ->color('warning')
+                    ->modalHeading('Réapprovisionner')
+                    ->modalSubmitActionLabel('Enregistrer')
+                    ->form([
+                        Forms\Components\TextInput::make('stock_disponible')
+                            ->label('Nouveau stock à Riadi City')
+                            ->numeric()
+                            ->minValue(0)
+                            ->required()
+                            ->default(fn (Product $record) => static::stockActuel($record)),
+                    ])
+                    ->action(function (Product $record, array $data) {
+                        static::appliquerStock($record, (int) $data['stock_disponible']);
+                        Notification::make()->title('Stock mis à jour ✅')->success()->send();
+                    }),
                 Tables\Actions\Action::make('preview')
                     ->label('Voir')
                     ->icon('heroicon-o-eye')

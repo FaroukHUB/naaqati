@@ -14,6 +14,10 @@ class InventoryResource extends Resource
 {
     protected static ?string $model = Inventory::class;
 
+    // Le stock se gère directement depuis la fiche produit (bouton « Stock »).
+    // Cet écran détaillé reste accessible mais masqué du menu pour simplifier.
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
 
     protected static ?string $navigationGroup = 'Stock';

@@ -26,7 +26,7 @@
                     @if ($produitsInvisibles > 0)
                         <div class="flex items-start gap-2 rounded-xl bg-amber-50 p-3 text-sm text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">
                             <x-filament::icon icon="heroicon-o-exclamation-triangle" class="mt-0.5 h-5 w-5 shrink-0" />
-                            <span><strong>{{ $produitsInvisibles }}</strong> produit(s) actif(s) <strong>sans stock disponible</strong> — ils n'apparaissent pas (ou « Épuisé ») sur la boutique. Ajoute-leur du stock dans <strong>Stock</strong>.</span>
+                            <span><strong>{{ $produitsInvisibles }}</strong> produit(s) actif(s) <strong>sans stock disponible</strong> — ils n'apparaissent pas (ou « Épuisé ») sur la boutique. Clique sur le bouton <strong>« Stock »</strong> du produit pour le réapprovisionner.</span>
                         </div>
                     @endif
                     @if ($categoriesVides > 0)
