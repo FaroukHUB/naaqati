@@ -86,7 +86,8 @@ class ProductResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\Toggle::make('actif')
                     ->label('Produit actif')
-                    ->default(true),
+                    ->default(true)
+                    ->helperText('⚠️ Pour apparaître sur la boutique, le produit doit être ACTIF et avoir du STOCK à Riadi City.'),
                 Forms\Components\Toggle::make('en_avant')
                     ->label('Mettre en avant (Notre sélection du moment)')
                     ->helperText('Apparaît dans la sélection en page d\'accueil.'),
@@ -124,6 +125,13 @@ class ProductResource extends Resource
                 Tables\Columns\IconColumn::make('actif')
                     ->label('Actif')
                     ->boolean(),
+                Tables\Columns\IconColumn::make('visible_boutique')
+                    ->label('Sur la boutique')
+                    ->getStateUsing(fn (\App\Models\Product $record) => $record->actif && $record->inventories()->where('actif', true)->exists())
+                    ->boolean()
+                    ->tooltip(fn (\App\Models\Product $record) => $record->actif && $record->inventories()->where('actif', true)->exists()
+                        ? 'Visible sur la boutique'
+                        : 'Invisible : il faut que le produit soit actif ET ait un stock à Riadi City'),
                 Tables\Columns\ToggleColumn::make('en_avant')
                     ->label('En avant'),
                 Tables\Columns\TextColumn::make('created_at')
